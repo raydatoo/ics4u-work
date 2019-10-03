@@ -1,0 +1,4 @@
+{"name": "bob", "points": 100, "is alive": true}
+
+
+
