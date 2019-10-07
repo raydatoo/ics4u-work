@@ -33,10 +33,10 @@ def makesum(num1: int, num2: int) -> int:
 
 def listsum(bleh: List[int]) -> int:
 
-    '''
-    dis function takes list and adds them
+    '''dis function takes list and adds them
 
-    bleh: list to addt
+    Args:
+        bleh: list to add
 
     return: int
     '''
