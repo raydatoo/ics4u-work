@@ -47,3 +47,32 @@ def listsum(bleh: List[int]) -> int:
         a += i
 
     return a
+
+
+def make_dict(blip: List[str]) -> dict:
+
+    '''Get occurences of words in a list
+
+    Args:
+        blip: A list of words
+
+    Returns:
+        dictionary w number of occurences
+
+    '''
+    
+    new_dict = {}
+    for i in blip:
+        if i not in new_dict.keys():
+            new_dict[i] = 0
+        new_dict[i] += 1
+
+    return new_dict
+        
+        
+
+        
+
+    
+    
+
