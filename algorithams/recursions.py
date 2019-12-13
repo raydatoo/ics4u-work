@@ -116,13 +116,52 @@ def count_x(string):
 #print(count_x("xxxxfftxxxtrdtrxdxfdxdfxdxxxtfxftxfx"))
 
 
-def changepi(string):
-    if len(string) == 2:
-        if string == 'pi':
-            return '3.14'
-        else:
-            return string
 
-    if string[0] == 'p' and string[1] == 'i':
-        return changepi(string[2:])
-    return string[0] + changepi(string[1:])
+
+def changepi(n):
+    if len(n) == 0:
+        return n
+    if n[0:2] == "pi":
+        return "3.14" + changepi(n[2:])
+    else:
+        return n[0] + changepi(n[1:])
+
+
+#print(changepi("pi4ygrygpirnrpihellpi"))
+
+
+
+def count_hi(n):
+    if len(n) == 0:
+        return 0
+    elif n[0] == "x":
+        return 0 + count_hi(n[2:])
+    elif n[0:2] == "hi":
+        return 1 + count_hi(n[1:])
+    
+    else:
+        return 0 + count_hi(n[1:])
+
+
+#print(count_hi("hihithhihihisdvgsdhisdgvdshiewhi"))
+
+def count_11(n):
+    if len(n) == 0:
+        return 0
+    elif n[-1] == 11:
+        return 1 + count_11(n[:-1])
+    else:
+        return 0 + count_11(n[:-1])
+    
+#print(count_11([2,3,453,4,11,3,4,11,3241,11]))
+
+
+def string_clean(n):
+    if len(n) == 1:
+        return n
+    elif n[0] == n[1]:
+        return string_clean(n[:1])
+    else:
+        return n[0] + string_clean(n[:1])
+
+
