@@ -160,8 +160,45 @@ def string_clean(n):
     if len(n) == 1:
         return n
     elif n[0] == n[1]:
-        return string_clean(n[:1])
+        return string_clean(n[1:])
     else:
-        return n[0] + string_clean(n[:1])
+        return n[0] + string_clean(n[1:])
 
 
+#print(string_clean("hhhhheeeelllooooooooo"))
+
+
+
+def no_x(n):
+    if len(n) == 0:
+        return n
+    elif n[0] == "x":
+        return no_x(n[1:])
+    else:
+        return n[0] + no_x(n[1:])
+
+
+print(no_x("xhexdxjbwxxehbshdxxxxjxwbx"))
+
+
+def pairstar(n):
+    if len(n) == 1:
+        return n
+    elif n[0] == n[1]:
+        return n [0] + "*" + pairstar(n[1:])
+    else:
+        return n [0] + pairstar(n[1:])
+
+#print(pairstar("aabdhdbhdgfvsssaa"))
+
+
+
+def allstar(n):
+    if len(n) == 1:
+        return n
+    else:
+        return n[0] + "*" + allstar(n[1:])
+
+
+
+print(allstar("dsugsauydg"))
