@@ -11,7 +11,8 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
 
         self.player = arcade.Sprite(center_x=100, center_y=200)
-        self.player.texture = arcade.make_circle_texture(20, arcade.color.BLUE)
+        self.player.texture = arcade.make_soft_square_texture(20, arcade.color.BLUE)
+        self.player.width = 10
 
         self.turret1 = arcade.Sprite(center_x= 500, center_y=700)
         self.turret1.texture = arcade.make_soft_square_texture(50,arcade.color.ORANGE,outer_alpha=255)
@@ -44,6 +45,16 @@ class MyGame(arcade.Window):
         self.player.update()
         self.turret1.update()
         self.lasers.update()
+
+
+        if self.player.center_x < 0:
+            self.player.center_x = 0
+        if self.player.center_x > WIDTH:
+            self.player.center_x = WIDTH
+        if self.player.center_y < 0:
+            self.player.center_y = 0
+        if self.player.center_y > HEIGHT:
+            self.player.center_y = HEIGHT
 
 
         if self.frame_count %60 == 0:
