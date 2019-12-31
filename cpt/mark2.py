@@ -15,6 +15,9 @@ class Player(arcade.Sprite):
         # Create a variable to hold our speed. 'angle' is created by the parent
         self.speed = 0
 
+        self.center_x = 400
+        self.center_y = 400
+
     
     def update(self):
         # Convert angle in degrees to radians.
@@ -28,14 +31,17 @@ class Player(arcade.Sprite):
         self.center_y += self.speed * math.cos(angle_rad)
 
 
+-----------------------------------------------------------------------
+
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
-        arcade.set_background_color(arcade.color.WHITE)
+        arcade.set_background_color(arcade.color.BLACK)
 
         self.player = Player("rokit_ship.png", 0.5)
         
+   ----------------------------------------------------------------------     
 
 
     def on_draw(self):
@@ -48,6 +54,8 @@ class MyGame(arcade.Window):
         
         self.player.update()
 
+
+---------------------------------------------------------------------
     
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -73,6 +81,10 @@ class MyGame(arcade.Window):
             self.player.change_angle = 0
 
 
+
+
+
+----------------------------------------------------
 
 def main():
     game = MyGame(WIDTH, HEIGHT, "My Game")
