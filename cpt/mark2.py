@@ -1,17 +1,21 @@
 import arcade
 import math 
 
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 1920
+HEIGHT = 1080
 
 class Turret(arcade.Sprite):
 
-    def __init__(self, image, scale, center_x, center_y):
+    def __init__(self, image, center_x, center_y, angle):
         # Call the parent init
-        super().__init__(image, scale)
+        super().__init__(image)
 
         self.center_x = center_x
         self.center_y = center_y
+        self.angle = angle
+        self.scale = 0.5
+    
+
 
 
 
@@ -33,6 +37,8 @@ class Player(arcade.Sprite):
 
         self.center_x = 400
         self.center_y = 400
+
+        self.hearts = 3
 
     
     def update(self):
@@ -58,8 +64,29 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.BLACK)
 
         self.player = Player("rokit_ship.png", 0.5)
-        
-        self.turret1 = Turret("turret.png", 0.5, 700, 800)
+
+        self.turret_list = arcade.SpriteList()
+
+        self.turret1 = Turret("turret.png",  700, 1000, 270)
+        self.turret2 = Turret("turret.png",  200, 800, 270)
+        self.turret3 = Turret("turret.png",  500, 600, 270)
+        self.turret4 = Turret("turret.png",  1800, 100, 270)
+        self.turret5 = Turret("turret.png",  450, 100, 270)
+        self.turret6 = Turret("turret.png",  200, 100, 270)
+        self.turret7 = Turret("turret.png",  600, 40, 270)
+        self.turret8 = Turret("turret.png",  800, 350, 270)
+
+        self.turret_list.append(self.turret1)
+        self.turret_list.append(self.turret2)
+        self.turret_list.append(self.turret3)
+        self.turret_list.append(self.turret4)
+        self.turret_list.append(self.turret5)
+        self.turret_list.append(self.turret6)
+        self.turret_list.append(self.turret7)
+        self.turret_list.append(self.turret8)
+
+
+
 
         self.laser_texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
         self.lasers = arcade.SpriteList()
@@ -80,7 +107,7 @@ class MyGame(arcade.Window):
 
         # Draw everything below here.
         self.player.draw()
-        self.turret1.draw()
+        self.turret_list.draw()
         self.lasers.draw()
 
     def update(self, delta_time):
@@ -90,24 +117,25 @@ class MyGame(arcade.Window):
         self.turret1.update()
         self.lasers.update()
 
-        if self.player.center_x < 0:
-            self.player.center_x = 0
-        if self.player.center_x > WIDTH:
-            self.player.center_x = WIDTH
-        if self.player.center_y < 0:
-            self.player.center_y = 0
-        if self.player.center_y > HEIGHT:
-            self.player.center_y = HEIGHT
+        if self.player.center_x < self.player.width/2:
+            self.player.center_x = self.player.width/2
+        if self.player.center_x > WIDTH - self.player.width/2:
+            self.player.center_x = WIDTH - self.player.width/2
+        if self.player.center_y < self.player.width/2:
+            self.player.center_y = self.player.width/2
+        if self.player.center_y > HEIGHT - self.player.width/2:
+            self.player.center_y = HEIGHT - self.player.width/2
 
         if self.frame_count %60 == 0:
-            laser = arcade.Sprite()
-            laser.center_x = self.turret1.center_x
-            laser.center_y = self.turret1.center_y
-            laser.change_y = -3
-            laser.texture = self.laser_texture
-            laser.width = 5
+            for turret in self.turret_list:
+                laser = arcade.Sprite()
+                laser.center_x = turret.center_x
+                laser.center_y = turret.center_y
+                laser.change_y = -3
+                laser.texture = self.laser_texture
+                laser.width = 5
 
-            self.lasers.append(laser)
+                self.lasers.append(laser)
 
         if self.player.collides_with_list(self.lasers):
             print("oof")
@@ -123,9 +151,9 @@ class MyGame(arcade.Window):
 
         # Forward/back
         if key == arcade.key.UP:
-            self.player.speed = 5
+            self.player.speed = 20
         elif key == arcade.key.DOWN:
-            self.player.speed = -5
+            self.player.speed = -20
 
         # Rotate left/right
         elif key == arcade.key.LEFT:
