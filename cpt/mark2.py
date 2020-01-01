@@ -4,6 +4,22 @@ import math
 WIDTH = 800
 HEIGHT = 800
 
+class Turret(arcade.Sprite):
+
+    def __init__(self, image, scale, center_x, center_y):
+        # Call the parent init
+        super().__init__(image, scale)
+
+        self.center_x = center_x
+        self.center_y = center_y
+
+
+
+        
+    
+
+
+
 class Player(arcade.Sprite):
 
     def __init__(self, image, scale):
@@ -31,7 +47,9 @@ class Player(arcade.Sprite):
         self.center_y += self.speed * math.cos(angle_rad)
 
 
------------------------------------------------------------------------
+
+
+
 
 class MyGame(arcade.Window):
     def __init__(self, width, height, title):
@@ -41,7 +59,20 @@ class MyGame(arcade.Window):
 
         self.player = Player("rokit_ship.png", 0.5)
         
-   ----------------------------------------------------------------------     
+        self.turret1 = Turret("turret.png", 0.5, 700, 800)
+
+        self.laser_texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
+        self.lasers = arcade.SpriteList()
+
+        self.frame_count = 0
+
+        
+        
+
+
+
+
+
 
 
     def on_draw(self):
@@ -49,13 +80,43 @@ class MyGame(arcade.Window):
 
         # Draw everything below here.
         self.player.draw()
+        self.turret1.draw()
+        self.lasers.draw()
 
     def update(self, delta_time):
         
+        self.frame_count += 1
         self.player.update()
+        self.turret1.update()
+        self.lasers.update()
+
+        if self.player.center_x < 0:
+            self.player.center_x = 0
+        if self.player.center_x > WIDTH:
+            self.player.center_x = WIDTH
+        if self.player.center_y < 0:
+            self.player.center_y = 0
+        if self.player.center_y > HEIGHT:
+            self.player.center_y = HEIGHT
+
+        if self.frame_count %60 == 0:
+            laser = arcade.Sprite()
+            laser.center_x = self.turret1.center_x
+            laser.center_y = self.turret1.center_y
+            laser.change_y = -3
+            laser.texture = self.laser_texture
+            laser.width = 5
+
+            self.lasers.append(laser)
+
+        if self.player.collides_with_list(self.lasers):
+            print("oof")
 
 
----------------------------------------------------------------------
+
+
+
+
     
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -84,7 +145,7 @@ class MyGame(arcade.Window):
 
 
 
-----------------------------------------------------
+
 
 def main():
     game = MyGame(WIDTH, HEIGHT, "My Game")
