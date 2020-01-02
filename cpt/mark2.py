@@ -51,8 +51,8 @@ class Player(arcade.Sprite):
         self.move_speed = 10
         self.turn_speed = 5
 
-        self.center_x = 400
-        self.center_y = 400
+        self.center_x = 100
+        self.center_y = 900
 
         self.hearts = 3
 
@@ -80,18 +80,18 @@ class MyGame(arcade.Window):
 
         arcade.set_background_color(arcade.color.BLACK)
 
-        self.player = Player("rokit_ship.png", 0.5)
+        self.player = Player("rokit_ship.png", 0.25)
 
         self.turret_list = arcade.SpriteList()
 
-        self.turret1 = Turret("turret.png",  700, 1000, 270)
-        self.turret2 = Turret("turret.png",  200, 800, 0)
-        self.turret3 = Turret("turret.png",  500, 600, 270)
-        self.turret4 = Turret("turret.png",  1800, 100, 90)
-        self.turret5 = Turret("turret.png",  1600, 500, 180)
-        self.turret6 = Turret("turret.png",  200, 100, 90)
-        self.turret7 = Turret("turret.png",  1300, 800, 270)
-        self.turret8 = Turret("turret.png",  800, 350, 0)
+        self.turret1 = Turret("turret.png",  700, 1000, 180)
+        self.turret2 = Turret("turret.png",  200, 800, 270)
+        self.turret3 = Turret("turret.png",  500, 600, 180)
+        self.turret4 = Turret("turret.png",  1800, 100, 0)
+        self.turret5 = Turret("turret.png",  1600, 500, 90)
+        self.turret6 = Turret("turret.png",  200, 100, 0)
+        self.turret7 = Turret("turret.png",  1300, 800, 180)
+        self.turret8 = Turret("turret.png",  800, 350, 270)
 
         self.turret_list.append(self.turret1)
         self.turret_list.append(self.turret2)
@@ -109,6 +109,8 @@ class MyGame(arcade.Window):
         self.lasers = arcade.SpriteList()
 
         self.frame_count = 0
+
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player, self.turret_list)
 
     #function that makes the lasors
 
@@ -148,10 +150,12 @@ class MyGame(arcade.Window):
     #the update 
 
     def update(self, delta_time):
+
+        self.physics_engine.update()
         
         self.frame_count += 1
         self.player.update()
-        self.turret1.update()
+        self.turret_list.update()
         self.lasers.update()
 
         #keep player in screen
@@ -192,6 +196,12 @@ class MyGame(arcade.Window):
             if hit == True:
                 laser.remove_from_sprite_lists()
                 print("oof")
+                self.player.center_x = 0
+                self.player.center_y = 900
+
+        if self.player.collides_with_list(self.turret_list):
+            self.player.center_x = 0
+            self.player.center_y = 900
 
 
         
