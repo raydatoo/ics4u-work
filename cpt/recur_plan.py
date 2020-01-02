@@ -26,3 +26,6 @@ a.collected = True
 
 
 print(count_score(liy))
+
+
+

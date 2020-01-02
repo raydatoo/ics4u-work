@@ -66,9 +66,17 @@ class MyGame(arcade.Window):
             laser.width = 5
 
             self.lasers.append(laser)
+
+        for laser in self.lasers:
+            if laser.top < 0:
+                laser.remove_from_sprite_lists()
+
+        
         
         if self.player.collides_with_list(self.lasers):
             arcade.set_background_color(arcade.color.BLACK)
+
+        print(len(self.lasers))
 
 
      
