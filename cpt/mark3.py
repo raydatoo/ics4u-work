@@ -26,12 +26,26 @@ class Turret(arcade.Sprite):
         """
         # Call the parent init
         super().__init__(image)
-
         self.center_x = center_x
         self.center_y = center_y
         self.angle = angle
         self.scale = 0.5
+        self.activated = False
+
+#laser class
     
+class Laser(arcade.Sprite):
+
+    def __init__(self, image, turret):
+
+        super().__init__(image)
+        self.center_x = turret.center_x
+        self.center_y = turret.center_y 
+        self.angle = turret.angle 
+        self.change_x = math.cos(math.radians(self.angle +90)) *5
+        self.change_y = math.sin(math.radians(self.angle +90)) *5
+        self.texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
+        self.width = 5
 
 
         
@@ -39,17 +53,18 @@ class Turret(arcade.Sprite):
 
 class Player(arcade.Sprite):
 
-    def __init__(self, image, scale):
+    def __init__(self, image):
         """ Set up the player """
 
         # Call the parent init
-        super().__init__(image, scale)
+        super().__init__(image)
 
         # Create a variable to hold our speed. 'angle' is created by the parent
         self.speed = 0
 
         self.move_speed = 10
         self.turn_speed = 5
+        self.scale = .25
 
         self.center_x = 100
         self.center_y = 900
@@ -71,7 +86,7 @@ class Player(arcade.Sprite):
 
 
 
-#game class
+#game
 
 
 class MyGame(arcade.Window):
@@ -80,56 +95,41 @@ class MyGame(arcade.Window):
 
         arcade.set_background_color(arcade.color.BLACK)
 
-        self.player = Player("rokit_ship.png", 0.25)
+        self.player = Player("rokit_ship.png")
+
+        #set up turrets
 
         self.turret_list = arcade.SpriteList()
+        turret1 = Turret("turret.png",  700, 1000, 180)
+        turret2 = Turret("turret.png",  200, 800, 270)
+        turret3 = Turret("turret.png",  500, 600, 180)
+        turret4 = Turret("turret.png",  1800, 100, 0)
+        turret5 = Turret("turret.png",  1600, 500, 90)
+        turret6 = Turret("turret.png",  200, 100, 0)
+        turret7 = Turret("turret.png",  1300, 800, 180)
+        turret8 = Turret("turret.png",  800, 400, 270)
+        self.turret_list.append(turret1)
+        self.turret_list.append(turret2)
+        self.turret_list.append(turret3)
+        self.turret_list.append(turret4)
+        self.turret_list.append(turret5)
+        self.turret_list.append(turret6)
+        self.turret_list.append(turret7)
+        self.turret_list.append(turret8)
 
-        self.turret1 = Turret("turret.png",  700, 1000, 180)
-        self.turret2 = Turret("turret.png",  200, 800, 270)
-        self.turret3 = Turret("turret.png",  500, 600, 180)
-        self.turret4 = Turret("turret.png",  1800, 100, 0)
-        self.turret5 = Turret("turret.png",  1600, 500, 90)
-        self.turret6 = Turret("turret.png",  200, 100, 0)
-        self.turret7 = Turret("turret.png",  1300, 800, 180)
-        self.turret8 = Turret("turret.png",  800, 350, 270)
+        #activate initial turrets
 
-        self.turret_list.append(self.turret1)
-        self.turret_list.append(self.turret2)
-        self.turret_list.append(self.turret3)
-        self.turret_list.append(self.turret4)
-        self.turret_list.append(self.turret5)
-        self.turret_list.append(self.turret6)
-        self.turret_list.append(self.turret7)
-        self.turret_list.append(self.turret8)
+        self.turret_list[7].activated = True
 
 
 
-
-        
         self.lasers = arcade.SpriteList()
 
         self.frame_count = 0
 
         
-    #function that makes the lasors
 
-    def lasor(self, turret):
-        laser = arcade.Sprite()
-        laser.center_x = turret.center_x
-        laser.center_y = turret.center_y 
-        laser.angle = turret.angle + 90
-        laser.texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
-        laser.width = 5
-        laser.change_x = math.cos(math.radians(laser.angle))
-        laser.change_y = math.sin(math.radians(laser.angle))
-
-        
-        self.lasers.append(laser)
-
-        
-        
-
-
+    
     #the draw
 
     def on_draw(self):
@@ -137,8 +137,9 @@ class MyGame(arcade.Window):
 
         # Draw everything below here.
         self.player.draw()
-        self.turret_list.draw()
         self.lasers.draw()
+        self.turret_list.draw()
+        
         
     #the update 
 
@@ -165,9 +166,16 @@ class MyGame(arcade.Window):
         #shoot laser every this many frames
 
 
-        if self.frame_count %60 == 0:
+        if self.frame_count %90 == 0:
             for turret in self.turret_list:
-                self.lasor(turret)
+                if turret.activated == True:
+                    laser = Laser("rokit_ship.png", turret)
+                    self.lasers.append(laser)
+
+        #spinny turret
+
+        if self.frame_count %3 == 0:
+            self.turret_list[7].angle += 1
                 
 
         #kill laser when it leaves screen to save memory
@@ -183,7 +191,7 @@ class MyGame(arcade.Window):
                 laser.remove_from_sprite_lists()
 
 
-        # check if hit laser
+        # check if hit laser or turret
 
         for laser in self.lasers:
             hit = arcade.check_for_collision(laser, self.player)
@@ -192,10 +200,14 @@ class MyGame(arcade.Window):
                 print("oof")
                 self.player.center_x = 0
                 self.player.center_y = 900
+                self.player.hearts -= 1
+                print(self.player.hearts)
 
         if self.player.collides_with_list(self.turret_list):
             self.player.center_x = 0
             self.player.center_y = 900
+            self.player.hearts -= 1
+            print(self.player.hearts)
 
 
         
@@ -214,6 +226,7 @@ class MyGame(arcade.Window):
             self.player.change_angle = self.player.turn_speed
         elif key == arcade.key.RIGHT:
             self.player.change_angle = -self.player.turn_speed
+
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
