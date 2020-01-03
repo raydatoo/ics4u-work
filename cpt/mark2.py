@@ -118,17 +118,16 @@ class MyGame(arcade.Window):
         laser = arcade.Sprite()
         laser.center_x = turret.center_x
         laser.center_y = turret.center_y
-        laser.tangle = turret.angle
         laser.angle = turret.angle 
         laser.texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
         laser.width = 5
-        if laser.tangle == 0:
+        if laser.angle == 0:
             laser.change_y = 3
-        elif laser.tangle == 90:
+        elif laser.angle == 90:
             laser.change_x = -3
-        elif laser.tangle == 180:
+        elif laser.angle == 180:
             laser.change_y = -3
-        elif laser.tangle == 270:
+        elif laser.angle == 270:
             laser.change_x = 3
         
         self.lasers.append(laser)
@@ -171,7 +170,8 @@ class MyGame(arcade.Window):
 
         #shoot laser every this many frames
 
-        if self.frame_count %120 == 0:
+
+        if self.frame_count %60 == 0:
             for turret in self.turret_list:
                 self.lasor(turret)
                 
