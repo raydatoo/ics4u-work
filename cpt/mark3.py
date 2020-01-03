@@ -30,7 +30,7 @@ class Turret(arcade.Sprite):
         self.center_y = center_y
         self.angle = angle
         self.scale = 0.5
-        self.activated = False
+        self.activated = True 
 
 #laser class
     
@@ -46,6 +46,16 @@ class Laser(arcade.Sprite):
         self.change_y = math.sin(math.radians(self.angle +90)) *5
         self.texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
         self.width = 5
+
+class Heart(arcade.Sprite):
+
+    def __init__(self, image, heart_num):
+
+        super().__init__(image)
+        self.scale = 1
+        self.top = HEIGHT - 20
+        self.left = heart_num*100 - 50
+
 
 
         
@@ -70,6 +80,7 @@ class Player(arcade.Sprite):
         self.center_y = 900
 
         self.hearts = 3
+
 
 
     
@@ -100,7 +111,7 @@ class MyGame(arcade.Window):
         #set up turrets
 
         self.turret_list = arcade.SpriteList()
-        turret1 = Turret("turret.png",  700, 1000, 180)
+        turret1 = Turret("turret.png",  700, 900, 180)
         turret2 = Turret("turret.png",  200, 800, 270)
         turret3 = Turret("turret.png",  500, 600, 180)
         turret4 = Turret("turret.png",  1800, 100, 0)
@@ -124,6 +135,19 @@ class MyGame(arcade.Window):
 
 
         self.lasers = arcade.SpriteList()
+        self.heart_list = arcade.SpriteList()
+
+        heart1 = Heart("heart.jpg", 1)
+        heart2 = Heart("heart.jpg", 2)
+        heart3 = Heart("heart.jpg", 3)
+        heart4 = Heart("heart.jpg", 4)
+        heart5 = Heart("heart.jpg", 5)
+        
+        self.heart_list.append(heart1)
+        self.heart_list.append(heart2)
+        self.heart_list.append(heart3)
+        self.heart_list.append(heart4)
+        self.heart_list.append(heart5)
 
         self.frame_count = 0
 
@@ -139,6 +163,7 @@ class MyGame(arcade.Window):
         self.player.draw()
         self.lasers.draw()
         self.turret_list.draw()
+        self.heart_list.draw()
         
         
     #the update 
