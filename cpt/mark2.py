@@ -121,14 +121,9 @@ class MyGame(arcade.Window):
         laser.angle = turret.angle 
         laser.texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
         laser.width = 5
-        if laser.angle == 0:
-            laser.change_y = 3
-        elif laser.angle == 90:
-            laser.change_x = -3
-        elif laser.angle == 180:
-            laser.change_y = -3
-        elif laser.angle == 270:
-            laser.change_x = 3
+        laser.change_x = math.cos(math.radians(laser.angle))
+        laser.change_y = math.sin(math.radians(laser.angle))
+
         
         self.lasers.append(laser)
 
