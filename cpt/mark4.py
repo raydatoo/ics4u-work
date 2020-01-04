@@ -1,0 +1,1 @@
+#fit mark three to native chromebook resolution
