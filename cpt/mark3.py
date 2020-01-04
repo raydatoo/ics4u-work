@@ -6,7 +6,6 @@ HEIGHT = 1080
 
 
 
-
 #turret class
 
 class Turret(arcade.Sprite):
@@ -155,7 +154,15 @@ class MyGame(arcade.Window):
 
         #activate initial turrets
 
+        self.turret_list[0].activated = True
+        self.turret_list[1].activated = True
+        self.turret_list[2].activated = True
+        self.turret_list[3].activated = True
+        self.turret_list[4].activated = True
+        self.turret_list[5].activated = True
+        self.turret_list[6].activated = True
         self.turret_list[7].activated = True
+
 
 
 
@@ -176,9 +183,27 @@ class MyGame(arcade.Window):
         self.heart_list.append(heart4)
         self.heart_list.append(heart5)
 
-        coin1 = Coin("coin.png", 900, 700, 45)
-        self.coin_list.append(coin1)
-        self.recur_list.append(coin1)
+        
+        coin = Coin("coin.png", 900, 300, 45)
+        self.coin_list.append(coin)
+        self.recur_list.append(coin)
+
+        coin = Coin("coin.png", 450, 200, 10)
+        self.coin_list.append(coin)
+        self.recur_list.append(coin)
+        
+        coin = Coin("coin.png", 200, 700, 60)
+        self.coin_list.append(coin)
+        self.recur_list.append(coin)
+
+        coin = Coin("coin.png", 1300, 500, 75)
+        self.coin_list.append(coin)
+        self.recur_list.append(coin)
+
+        coin = Coin("coin.png", 1600, 700, 55)
+        self.coin_list.append(coin)
+        self.recur_list.append(coin)
+        
 
         self.frame_count = 0
         self.score = 0
@@ -285,7 +310,10 @@ class MyGame(arcade.Window):
             hit = arcade.check_for_collision(coin, self.player)
             if hit == True:
                 coin.remove_from_sprite_lists()
-                coin.time_collected = 300-self.frame_count//60 
+                coin.time_collected = 300-self.frame_count//60
+
+        #if self.player.hearts == 0:
+        #   self.director.next_view() 
 
 
 
@@ -305,6 +333,9 @@ class MyGame(arcade.Window):
             self.player.change_angle = self.player.turn_speed
         elif key == arcade.key.RIGHT:
             self.player.change_angle = -self.player.turn_speed
+
+        #elif key == arcade.key.KEY_0:
+        #   self.director.next_view()
 
 
     def on_key_release(self, key, modifiers):
