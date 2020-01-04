@@ -5,6 +5,8 @@ WIDTH = 1920
 HEIGHT = 1080
 
 
+
+
 #turret class
 
 class Turret(arcade.Sprite):
@@ -30,7 +32,7 @@ class Turret(arcade.Sprite):
         self.center_y = center_y
         self.angle = angle
         self.scale = 0.5
-        self.activated = True 
+        self.activated = False 
 
 #laser class
     
@@ -56,6 +58,18 @@ class Heart(arcade.Sprite):
         self.top = HEIGHT - 20
         self.left = heart_num*100 - 50
 
+class Coin(arcade.Sprite):
+
+    def __init__(self, image, center_x, center_y, collection_bonus):
+        super().__init__(image)
+        self.scale = .1
+        self.center_x = center_x
+        self.center_y = center_y
+        self.collection_bonus = collection_bonus
+        self.time_collected = None
+
+
+
 
 
         
@@ -79,7 +93,7 @@ class Player(arcade.Sprite):
         self.center_x = 100
         self.center_y = 900
 
-        self.hearts = 3
+        self.hearts = 5
 
 
 
@@ -94,6 +108,17 @@ class Player(arcade.Sprite):
         # Use math to find our change based on our speed and angle
         self.center_x += -self.speed * math.sin(angle_rad)
         self.center_y += self.speed * math.cos(angle_rad)
+
+        #keep player in screen
+
+        if self.center_x < self.width/2:
+            self.center_x = self.width/2
+        if self.center_x > WIDTH - self.width/2:
+            self.center_x = WIDTH - self.width/2
+        if self.center_y < self.width/2:
+            self.center_y = self.width/2
+        if self.center_y > HEIGHT - 100 - self.width/2:
+            self.center_y = HEIGHT - 100 - self.width/2
 
 
 
@@ -136,6 +161,8 @@ class MyGame(arcade.Window):
 
         self.lasers = arcade.SpriteList()
         self.heart_list = arcade.SpriteList()
+        self.coin_list = arcade.SpriteList()
+        self.recur_list = []
 
         heart1 = Heart("heart.jpg", 1)
         heart2 = Heart("heart.jpg", 2)
@@ -149,7 +176,22 @@ class MyGame(arcade.Window):
         self.heart_list.append(heart4)
         self.heart_list.append(heart5)
 
+        coin1 = Coin("coin.png", 900, 700, 45)
+        self.coin_list.append(coin1)
+        self.recur_list.append(coin1)
+
         self.frame_count = 0
+        self.score = 0
+        self.time = 300
+        
+    def count_score(self,n):
+        if len(n) == 0:
+            return 0
+        elif n[0].time_collected != None:
+            return n[0].time_collected*n[0].collection_bonus + self.count_score(n[1:])
+        else:
+            return 0 + self.count_score(n[1:])
+        
 
         
 
@@ -164,6 +206,11 @@ class MyGame(arcade.Window):
         self.lasers.draw()
         self.turret_list.draw()
         self.heart_list.draw()
+        self.coin_list.draw()
+
+
+        output = f"Score: {self.score}"
+        arcade.draw_text(output, 1500, 1000, arcade.color.WHITE, 50)
         
         
     #the update 
@@ -173,20 +220,18 @@ class MyGame(arcade.Window):
        
         
         self.frame_count += 1
+        
+
+        if self.score > 9999999:
+            self.score = 9999999
         self.player.update()
         self.turret_list.update()
         self.lasers.update()
+        self.coin_list.update()
+        self.score = self.count_score(self.recur_list)
+        
 
-        #keep player in screen
-
-        if self.player.center_x < self.player.width/2:
-            self.player.center_x = self.player.width/2
-        if self.player.center_x > WIDTH - self.player.width/2:
-            self.player.center_x = WIDTH - self.player.width/2
-        if self.player.center_y < self.player.width/2:
-            self.player.center_y = self.player.width/2
-        if self.player.center_y > HEIGHT - self.player.width/2:
-            self.player.center_y = HEIGHT - self.player.width/2
+        
 
         #shoot laser every this many frames
 
@@ -226,13 +271,22 @@ class MyGame(arcade.Window):
                 self.player.center_x = 0
                 self.player.center_y = 900
                 self.player.hearts -= 1
+                self.heart_list.pop()
                 print(self.player.hearts)
 
         if self.player.collides_with_list(self.turret_list):
             self.player.center_x = 0
             self.player.center_y = 900
             self.player.hearts -= 1
+            self.heart_list.pop()
             print(self.player.hearts)
+
+        for coin in self.coin_list:
+            hit = arcade.check_for_collision(coin, self.player)
+            if hit == True:
+                coin.remove_from_sprite_lists()
+                coin.time_collected = 300-self.frame_count//60 
+
 
 
         
