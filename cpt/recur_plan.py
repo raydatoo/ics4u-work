@@ -1,36 +1,79 @@
+import json
+
+from typing import List
+
+
+def merge_sort(numbers):
+    # base case
+    if len(numbers) == 1:
+        return numbers
+
+    midpoint = len(numbers)//2
+
+    # two recursive steps
+    # mergesort left
+    left_side = merge_sort(numbers[:midpoint])
+    # mergesort right
+    right_side = merge_sort(numbers[midpoint:])
+    # merge the two together
+    sorted_list = []
+
+    # loop through both lists with two markers
+    left_marker = 0
+    right_marker = 0
+    while left_marker < len(left_side) and right_marker < len(right_side):
+        # if right value less than left value, add right value to sorted, increase right marker
+        if left_side[left_marker] < right_side[right_marker]:
+            sorted_list.append(left_side[left_marker])
+            left_marker += 1
+        # if left value less than right value, add left value to sorted, increase left marker
+        else:
+            sorted_list.append(right_side[right_marker])
+            right_marker += 1
+    
+    # create a while loop to gather the rest of the values from either list
+    while right_marker < len(right_side):
+        sorted_list.append(right_side[right_marker])
+        right_marker += 1
+    
+    while left_marker < len(left_side):
+        sorted_list.append(left_side[left_marker])
+        left_marker += 1
+    
+    # return the sorted list
+    return sorted_list
+
+def merge_sorter(n):
+     if len(n) == 1:
+        return n
+    
+    
+
+b = {"t":6}
+
+print(merge_sorter(b))
+
 
 '''
-time = 5
-
-def count_score(n):
-    if len(n) == 0:
-        return 0
-    elif n[0].collected == True:
-        return time*n[0].collection_bonus + count_score(n[1:]) 
-    else:
-        return 0 + count_score(n[1:])
+with open("scores.json", "r") as f:
+    data = json.load(f)
 
 
-class Coin():
-    def __init__(self, collection_bonus):
-        self.collection_bonus = collection_bonus
-        self.collected = False
+data = {"t":6, "y":9}
+
+x = 0
+for value in data.values():
+    x += value
 
 
-a = Coin(5)
-b = Coin(3)
-c = Coin(6)
-d = Coin(5)
-
-liy = [a,b,c,d]
-
-a.collected = True
-
-
-print(count_score(liy))
+with open("scores.json", "w") as f:
+    json.dump(x, f)
+    
 
 
 '''
+
+
 
 
 
