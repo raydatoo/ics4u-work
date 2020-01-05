@@ -143,6 +143,7 @@ class MyGame(arcade.Window):
         turret6 = Turret("turret.png",  200, 100, 0)
         turret7 = Turret("turret.png",  1300, 800, 180)
         turret8 = Turret("turret.png",  800, 400, 270)
+        turret9 = Turret("turret.png",  900, 400, 90)
         self.turret_list.append(turret1)
         self.turret_list.append(turret2)
         self.turret_list.append(turret3)
@@ -151,6 +152,7 @@ class MyGame(arcade.Window):
         self.turret_list.append(turret6)
         self.turret_list.append(turret7)
         self.turret_list.append(turret8)
+        self.turret_list.append(turret9)
 
         #activate initial turrets
 
@@ -162,6 +164,7 @@ class MyGame(arcade.Window):
         self.turret_list[5].activated = True
         self.turret_list[6].activated = True
         self.turret_list[7].activated = True
+        self.turret_list[8].activated = True
 
 
 
@@ -261,7 +264,7 @@ class MyGame(arcade.Window):
         #shoot laser every this many frames
 
 
-        if self.frame_count %90 == 0:
+        if self.frame_count %60 == 0:
             for turret in self.turret_list:
                 if turret.activated == True:
                     laser = Laser("rokit_ship.png", turret)
@@ -271,6 +274,8 @@ class MyGame(arcade.Window):
 
         if self.frame_count %3 == 0:
             self.turret_list[7].angle += 1
+            self.turret_list[8].angle += 1
+
                 
 
         #kill laser when it leaves screen to save memory
