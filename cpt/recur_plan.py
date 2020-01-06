@@ -9,7 +9,6 @@ def check_name(lista, name):
     elif name in lista:
         return check_name(lista, name + "x")
 
-
 def binary_search(lista, target):
 
     start = 0
@@ -66,7 +65,6 @@ def merge_sort(numbers):
     # return the sorted list
     return sorted_list
 
-
 def save_score(name = None, score = None):
     with open("scores.json", "r") as f:
         score_dictionary = json.load(f)
@@ -88,10 +86,20 @@ def save_score(name = None, score = None):
     score_list = merge_sort(score_list)
 
     
-    return (len(score_list)-(binary_search(score_list, score)), name)
+    return (len(score_list)-(binary_search(score_list, score)), name, score)
+
+def find_highscore():
+    with open("scores.json", "r") as f:
+        dictionary = json.load(f)
+    high_value = 0
+    high_key = None
+    for key,value in dictionary.items():
+        if value > high_value:
+            high_value = value
+            high_key = key
+    return high_value, high_key
 
 
-#print(save_score("jeff", 10000))
 
 
 

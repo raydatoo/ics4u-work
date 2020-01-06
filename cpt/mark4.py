@@ -61,7 +61,7 @@ class Coin(arcade.Sprite):
 
     def __init__(self, image, center_x, center_y, collection_bonus):
         super().__init__(image)
-        self.scale = .1
+        self.scale = .05
         self.center_x = center_x
         self.center_y = center_y
         self.collection_bonus = collection_bonus
