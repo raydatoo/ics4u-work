@@ -30,7 +30,7 @@ class Turret(arcade.Sprite):
         self.center_x = center_x
         self.center_y = center_y
         self.angle = angle
-        self.scale = 0.5
+        self.scale = 0.4
         self.activated = False 
 
 #laser class
@@ -53,9 +53,9 @@ class Heart(arcade.Sprite):
     def __init__(self, image, heart_num):
 
         super().__init__(image)
-        self.scale = 1
+        self.scale = .75
         self.top = HEIGHT - 20
-        self.left = heart_num*100 - 50
+        self.left = heart_num*75 - 50
 
 class Coin(arcade.Sprite):
 
@@ -89,8 +89,8 @@ class Player(arcade.Sprite):
         self.turn_speed = 5
         self.scale = .25
 
-        self.center_x = 100
-        self.center_y = 400
+        self.center_x = 25
+        self.center_y = 550
 
         self.hearts = 5
 
@@ -136,12 +136,12 @@ class MyGame(arcade.Window):
 
         self.turret_list = arcade.SpriteList()
         turret1 = Turret("turret.png",  700, 400, 180)
-        turret2 = Turret("turret.png",  300, 600, 270)
-        turret3 = Turret("turret.png",  500, 600, 180)
+        turret2 = Turret("turret.png",  1200, 200, 270)
+        turret3 = Turret("turret.png",  1000, 100, 180)
         turret4 = Turret("turret.png",  400, 100, 0)
         turret5 = Turret("turret.png",  500, 500, 90)
         turret6 = Turret("turret.png",  300, 100, 0)
-        turret7 = Turret("turret.png",  1300, 600, 180)
+        turret7 = Turret("turret.png",  1300, 560, 180)
         turret8 = Turret("turret.png",  300, 400, 270)
         turret9 = Turret("turret.png",  670, 400, 90)
 
@@ -158,7 +158,7 @@ class MyGame(arcade.Window):
 
         #activate initial turrets
         
-        '''
+        
         self.turret_list[0].activated = True
         self.turret_list[1].activated = True
         self.turret_list[2].activated = True
@@ -169,7 +169,7 @@ class MyGame(arcade.Window):
         self.turret_list[7].activated = True
         self.turret_list[8].activated = True
 
-        '''
+    
 
 
 
@@ -200,11 +200,11 @@ class MyGame(arcade.Window):
         self.coin_list.append(coin)
         self.recur_list.append(coin)
         
-        coin = Coin("coin.png", 200, 650, 60)
+        coin = Coin("coin.png", 200, 400, 60)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 1300, 500, 75)
+        coin = Coin("coin.png", 1250, 500, 75)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
@@ -243,7 +243,7 @@ class MyGame(arcade.Window):
 
 
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 1000, 600, arcade.color.WHITE, 25)
+        arcade.draw_text(output, 1100, 650, arcade.color.WHITE, 30)
         
         
     #the update 

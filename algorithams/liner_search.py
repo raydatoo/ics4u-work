@@ -25,8 +25,8 @@ def function_3(liist, target):
 
 
 
-print(function_3([1], 4))
-#print(function_2([1,2,4,5,6,4,2,3,5,6,4,8], 4))
+#print(function_3([1], 4))
+print(function_2([1,2,4,5,6,4,2,3,5,6,4,8], 4))
 
 import math
 

@@ -1,7 +1,30 @@
 import json
+import math
 
 from typing import List
 
+def check_name(lista, name):
+    if name not in lista:
+        return name
+    elif name in lista:
+        return check_name(lista, name + "x")
+
+
+def binary_search(lista, target):
+
+    start = 0
+    end = len(lista) - 1
+
+    while start <= end:
+        mid = math.ceil((start + end) // 2)
+        if lista[mid] == target:
+            return mid
+        elif lista[mid] > target:
+            end = mid - 1
+        elif lista[mid] < target:
+            start = mid + 1
+
+    return -1
 
 def merge_sort(numbers):
     # base case
@@ -43,35 +66,46 @@ def merge_sort(numbers):
     # return the sorted list
     return sorted_list
 
-def merge_sorter(n):
-     if len(n) == 1:
-        return n
+
+def save_score(name = None, score = None):
+    with open("scores.json", "r") as f:
+        score_dictionary = json.load(f)
     
+    name_list = []
+    for key in score_dictionary.keys():
+        name_list.append(key)
     
+    if name != None:
+        name = check_name(name_list, name)
+        score_dictionary[name] = score
 
-b = {"t":6}
+    with open("scores.json", "w") as f:
+        json.dump(score_dictionary, f)
 
-print(merge_sorter(b))
+    score_list = []
+    for value in score_dictionary.values():
+        score_list.append(value)
+    score_list = merge_sort(score_list)
 
-
-'''
-with open("scores.json", "r") as f:
-    data = json.load(f)
-
-
-data = {"t":6, "y":9}
-
-x = 0
-for value in data.values():
-    x += value
-
-
-with open("scores.json", "w") as f:
-    json.dump(x, f)
     
+    return (len(score_list)-(binary_search(score_list, score)), name)
 
 
-'''
+#print(save_score("jeff", 10000))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
