@@ -201,4 +201,57 @@ def allstar(n):
 
 
 
-print(allstar("dsugsauydg"))
+#print(allstar("dsugsauydg"))
+
+
+
+def contain_6(lista, n):
+    if len(lista) == 0:
+        return False
+    elif lista[n] == 6:
+        return True
+    else:
+        return contain_6(lista[1:])
+
+
+print(contain_6([6], 0)
+
+
+
+'''
+def brackets(n):
+    if n[0] == "(" and n[-1] == ")":
+        return n [1:-1]
+    elif n[0] != "(":
+        return brackets(n[1:])
+    elif n[-1] != ")":
+        return brackets(n[:-1])
+
+
+
+
+
+print(brackets(("xyz(abc)123")))
+
+'''
+
+
+
+
+
+
+
+def sum_sevens(n):
+    if len(n) == 0:
+        return 0
+    elif n[0] == 7:
+        return 7 + sum_sevens(n[1:])
+    else:
+        return 0 + sum_sevens(n[1:])
+
+
+#print(sum_sevens([6,4,8,7,4,57,7,34,6,7]))
+
+
+
+
