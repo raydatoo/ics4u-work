@@ -135,15 +135,15 @@ class MyGame(arcade.Window):
         #set up turrets
 
         self.turret_list = arcade.SpriteList()
-        turret1 = Turret("turret.png",  700, 400, 180)
-        turret2 = Turret("turret.png",  1200, 200, 270)
-        turret3 = Turret("turret.png",  1000, 100, 180)
-        turret4 = Turret("turret.png",  400, 100, 0)
-        turret5 = Turret("turret.png",  500, 500, 90)
-        turret6 = Turret("turret.png",  300, 100, 0)
-        turret7 = Turret("turret.png",  1300, 560, 180)
-        turret8 = Turret("turret.png",  300, 400, 270)
-        turret9 = Turret("turret.png",  670, 400, 90)
+        turret1 = Turret("turret.png",  50, 300, 270)
+        turret2 = Turret("turret.png",  300, 50, 0)
+        turret3 = Turret("turret.png",  600, 600, 180)
+        turret4 = Turret("turret.png",  800, 450, 90)
+        turret5 = Turret("turret.png",  450, 100, 0)
+        turret6 = Turret("turret.png",  1100, 125, 90)
+        turret7 = Turret("turret.png",  1300, 250, 90)
+        turret8 = Turret("turret.png",  1000, 600, 180)
+        turret9 = Turret("turret.png",  900, 35, 0)
 
         
         self.turret_list.append(turret1)
@@ -168,6 +168,7 @@ class MyGame(arcade.Window):
         self.turret_list[6].activated = True
         self.turret_list[7].activated = True
         self.turret_list[8].activated = True
+        
 
     
 
@@ -276,10 +277,12 @@ class MyGame(arcade.Window):
                     self.lasers.append(laser)
 
         #spinny turret
-
+        '''
         if self.frame_count %3 == 0:
             self.turret_list[7].angle += 1
             self.turret_list[8].angle += 1
+
+            '''
 
                 
 
