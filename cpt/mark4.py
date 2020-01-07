@@ -31,15 +31,15 @@ class Turret(arcade.Sprite):
         self.center_y = center_y
         self.angle = angle
         self.scale = 0.4
-        self.activated = False 
+        self.activated = False
 
 #laser class
     
 class Laser(arcade.Sprite):
 
-    def __init__(self, image, turret):
+    def __init__(self, turret):
 
-        super().__init__(image)
+        super().__init__()
         self.center_x = turret.center_x
         self.center_y = turret.center_y 
         self.angle = turret.angle 
@@ -47,6 +47,7 @@ class Laser(arcade.Sprite):
         self.change_y = math.sin(math.radians(self.angle +90)) *5
         self.texture = arcade.make_soft_square_texture(30, arcade.color.ORANGE, outer_alpha=255)
         self.width = 5
+
 
 class Heart(arcade.Sprite):
 
@@ -73,21 +74,20 @@ class Coin(arcade.Sprite):
 
         
 #player class
-
 class Player(arcade.Sprite):
 
     def __init__(self, image):
         """ Set up the player """
 
         # Call the parent init
-        super().__init__(image)
+        super().__init__(image, scale=0.25)
 
         # Create a variable to hold our speed. 'angle' is created by the parent
         self.speed = 0
 
         self.move_speed = 10
         self.turn_speed = 5
-        self.scale = .25
+        # self.scale = 1
 
         self.center_x = 25
         self.center_y = 550
@@ -103,6 +103,7 @@ class Player(arcade.Sprite):
 
         # Rotate the ship
         self.angle += self.change_angle
+        self.center_y
 
         # Use math to find our change based on our speed and angle
         self.center_x += -self.speed * math.sin(angle_rad)
@@ -118,10 +119,12 @@ class Player(arcade.Sprite):
             self.center_y = self.width/2
         if self.center_y > HEIGHT - 100 - self.width/2:
             self.center_y = HEIGHT - 100 - self.width/2
-
-
-
-#game
+    
+    def draw(self):
+        super().draw()
+        arcade.draw_points(self.points, arcade.color.GREEN, size=3)
+        
+        #game
 
 
 class MyGame(arcade.Window):
@@ -141,7 +144,7 @@ class MyGame(arcade.Window):
         turret4 = Turret("turret.png",  800, 450, 90)
         turret5 = Turret("turret.png",  450, 100, 0)
         turret6 = Turret("turret.png",  1100, 125, 90)
-        turret7 = Turret("turret.png",  1300, 250, 90)
+        turret7 = Turret("turret.png",  1100, 125, 90)
         turret8 = Turret("turret.png",  1000, 600, 180)
         turret9 = Turret("turret.png",  900, 35, 0)
 
@@ -251,6 +254,8 @@ class MyGame(arcade.Window):
 
     def update(self, delta_time):
 
+
+
        
         
         self.frame_count += 1
@@ -270,10 +275,10 @@ class MyGame(arcade.Window):
         #shoot laser every this many frames
 
 
-        if self.frame_count %60 == 0:
+        if self.frame_count % 60 == 0:
             for turret in self.turret_list:
                 if turret.activated == True:
-                    laser = Laser("rokit_ship.png", turret)
+                    laser = Laser(turret)
                     self.lasers.append(laser)
 
         #spinny turret
@@ -306,20 +311,38 @@ class MyGame(arcade.Window):
             if hit == True:
                 laser.remove_from_sprite_lists()
                
-                self.player.center_x = 100
-                self.player.center_y = 400
+                self.player.center_x = 25
+                self.player.center_y = 550
                 self.player.hearts -= 1
-                self.heart_list.pop()
+                self.heart_list[-1].remove_from_sprite_lists()
                 print(self.player.hearts)
 
         if self.player.collides_with_list(self.turret_list):
-            self.player.center_x = 100
-            self.player.center_y = 400
+            self.player.center_x = 25
+            self.player.center_y = 550
             self.player.hearts -= 1
             self.heart_list[-1].remove_from_sprite_lists()
             print(self.player.hearts)
 
-        for coin in self.coin_list:
+        for coin in self.GHT:
+            self.player.change_angle = -self.player.turn_speed
+
+        #elif key == arcade.key.KEY_0:
+        #   self.director.next_view()
+
+
+    def on_key_release(self, key, modifiers):
+        """Called when the user releases a key. """
+
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.player.speed = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.player.change_angle = 0
+
+
+def main():
+    game = MyGame(WIDTH, HEIGHT, "My Game")
+    game.score = coin_list:
             hit = arcade.check_for_collision(coin, self.player)
             if hit == True:
                 coin.remove_from_sprite_lists()
@@ -362,6 +385,7 @@ class MyGame(arcade.Window):
 
 def main():
     game = MyGame(WIDTH, HEIGHT, "My Game")
+    game.score = 
     arcade.run()
 
 

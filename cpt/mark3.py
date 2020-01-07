@@ -308,7 +308,7 @@ class MyGame(arcade.Window):
             self.player.center_x = 0
             self.player.center_y = 900
             self.player.hearts -= 1
-            self.heart_list.pop()
+            self.heart_list[-1].remove_from_sprite_lists()
             print(self.player.hearts)
 
         for coin in self.coin_list:

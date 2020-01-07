@@ -112,10 +112,53 @@ def find_highscore():
 
 
 
+#turret class
+
+class Turret(arcade.Sprite):
+    '''Turret class
+    Attributes:
+        image (image file): the name of the food
+        center_x (int): x pos of turret
+        center_y (int): y pos of turret
+        angle (int): angle of turret
+        '''
+
+    def __init__(self, image, center_x, center_y, angle):
+        """Create a Turret object.
+        Args:
+            image: file path of image
+            center_x: x pos of turret
+            center_y: y pos of turret
+            angle: angle of turret
+        """
+        # Call the parent init
+        super().__init__(image)
+        self.center_x = center_x
+        self.center_y = center_y
+        self.angle = angle
+        self.scale = 0.4
+        self.activated = False
 
 
 
 
 
+def _set_scale(self, new_value: float):
+        """ Set the center x coordinate of the sprite. """
+        if new_value != self._height:
+            self.clear_spatial_hashes()
+            self._point_list_cache = None
+            self._scale = new_value
+            if self._texture:
+                self._width = self._texture.width * self._scale
+                self._height = self._texture.height * self._scale
+                self._texture.scale = self._scale  # ADDED
 
+                points = self._texture.unscaled_hitbox_points  # ADDED
+                scaled_points = [[value * self._scale for value in point] for point in points]  # ADDED
+                self._points = scaled_points  # ADDED
 
+                self.add_spatial_hashes()
+
+            for sprite_list in self.sprite_lists:
+                sprite_list.update_position(self)
