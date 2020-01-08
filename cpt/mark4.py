@@ -1,5 +1,6 @@
 import arcade
 import math
+import json
 
 WIDTH = 1350
 HEIGHT = 700
@@ -199,7 +200,7 @@ class GameView(arcade.View):
     def count_score(self, num_list):
         if len(num_list) == 0:
             return 0
-        elif num_list[0].time_collected != None:
+        elif num_list[0].time_collected is not None:
             return num_list[0].time_collected*num_list[0].collection_bonus + self.count_score(num_list[1:])
         else:
             return 0 + self.count_score(num_list[1:])
@@ -237,7 +238,7 @@ class GameView(arcade.View):
 
         if self.frame_count % 90 == 0:
             for turret in self.turret_list:
-                if turret.activated == True:
+                if turret.activated is True:
                     laser = Laser(turret)
                     self.lasers.append(laser)
 
@@ -265,7 +266,7 @@ class GameView(arcade.View):
 
         for laser in self.lasers:
             hit = arcade.check_for_collision(laser, self.player)
-            if hit == True:
+            if hit is True:
                 laser.remove_from_sprite_lists()
 
                 self.player.center_x = 35
@@ -283,7 +284,7 @@ class GameView(arcade.View):
 
         for coin in self.coin_list:
             hit = arcade.check_for_collision(coin, self.player)
-            if hit == True:
+            if hit is True:
                 coin.remove_from_sprite_lists()
                 coin.time_collected = 300-self.frame_count//60
 
@@ -299,7 +300,7 @@ class GameView(arcade.View):
             finish_view.score = self.score
             finish_view.win = False
             self.window.show_view(finish_view)
-           
+
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
@@ -315,12 +316,11 @@ class GameView(arcade.View):
         elif key == arcade.key.RIGHT:
             self.player.change_angle = -self.player.turn_speed
 
-        
         elif key == arcade.key.KEY_0:
             self.window.show_view(FinishView())
             FinishView.win = True
-            FinishView.score  = 5
-    
+            FinishView.score = 5
+
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
@@ -340,10 +340,10 @@ class FinishView(arcade.View):
         """
         Draw "Game over" across the screen.
         """
-        if self.win == False:
+        if self.win is False:
             arcade.set_background_color(arcade.color.RED)
             arcade.draw_text("You Lose", 700, 700, arcade.color.WHITE, 100)
-        elif self.win == True:
+        elif self.win is True:
             arcade.set_background_color(arcade.color.GREEN)
             arcade.draw_text("You Win", 500, 500, arcade.color.BLACK, 100)
 
@@ -352,7 +352,6 @@ class FinishView(arcade.View):
         arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100, arcade.color.ORANGE)
         arcade.draw_text("Click here to try  \n again", WIDTH//2 - 100, 300, arcade.color.BLACK, 25)
         arcade.draw_text("Click here to submit  \n score", WIDTH//2 - 100, 75, arcade.color.BLACK, 25)
-
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         if 300 < _x < 900 and 250 < _y < 400:
@@ -368,19 +367,96 @@ class ScoreView(arcade.View):
         super().__init__()
         arcade.set_background_color(arcade.color.BLACK)
 
+    def check_name(lista, name):
+        if name not in lista:
+            return name
+        elif name in lista:
+            return check_name(lista, name + "x")
+
+    def binary_search(lista, target):
+        start = 0
+        end = len(lista) - 1
+        while start <= end:
+            mid = math.ceil((start + end) // 2)
+            if lista[mid] == target:
+                return mid
+            elif lista[mid] > target:
+                end = mid - 1
+            elif lista[mid] < target:
+                start = mid + 1
+        return -1
+
+    def merge_sort(numbers):
+        if len(numbers) == 1:
+            return numbers
+        midpoint = len(numbers)//2
+        left_side = merge_sort(numbers[:midpoint])
+        right_side = merge_sort(numbers[midpoint:])
+        sorted_list = []
+        left_marker = 0
+        right_marker = 0
+        while left_marker < len(left_side) and right_marker < len(right_side):
+
+            if left_side[left_marker] < right_side[right_marker]:
+                sorted_list.append(left_side[left_marker])
+                left_marker += 1
+
+            else:
+                sorted_list.append(right_side[right_marker])
+                right_marker += 1
+
+        while right_marker < len(right_side):
+            sorted_list.append(right_side[right_marker])
+            right_marker += 1
+
+        while left_marker < len(left_side):
+            sorted_list.append(left_side[left_marker])
+            left_marker += 1
+
+        return sorted_list
+
+    def save_score(name=None, score=None):
+        with open("scores.json", "r") as f:
+            score_dictionary = json.load(f)
+
+        name_list = []
+        for key in score_dictionary.keys():
+            name_list.append(key)
+
+        if name is not None:
+            name = check_name(name_list, name)
+            score_dictionary[name] = score
+
+        with open("scores.json", "w") as f:
+            json.dump(score_dictionary, f)
+
+        score_list = []
+        for value in score_dictionary.values():
+            score_list.append(value)
+        score_list = merge_sort(score_list)
+
+        return [len(score_list)-(binary_search(score_list, score)), name, score]
+
+    def find_highscore():
+        with open("scores.json", "r") as f:
+            dictionary = json.load(f)
+        high_value = 0
+        high_key = None
+        for key, value in dictionary.items():
+            if value > high_value:
+                high_value = value
+                high_key = key
+        return [high_value, high_key]
+
     def on_draw(self):
         arcade.start_render()
         arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100, arcade.color.ORANGE)
-        
-
-
 
 
 def main():
     window = arcade.Window(WIDTH, HEIGHT, "Different Views Example")
     window.show_view(GameView())
     arcade.run()
-
 
 
 if __name__ == "__main__":

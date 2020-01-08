@@ -87,7 +87,7 @@ def save_score(name = None, score = None):
     score_list = merge_sort(score_list)
 
     
-    return (len(score_list)-(binary_search(score_list, score)), name, score)
+    return[len(score_list)-(binary_search(score_list, score)), name, score]
 
 def find_highscore():
     with open("scores.json", "r") as f:
@@ -101,3 +101,4 @@ def find_highscore():
     return high_value, high_key
 
 
+print(save_score("john", 6))
