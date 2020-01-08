@@ -333,7 +333,7 @@ class GameView(arcade.View):
 class FinishView(arcade.View):
     def __init__(self):
         super().__init__()
-        arcade.set_background_color(arcade.color.BABY_BLUE)
+        arcade.set_background_color(arcade.color.BLACK)
 
     def on_draw(self):
         arcade.start_render()
@@ -341,22 +341,39 @@ class FinishView(arcade.View):
         Draw "Game over" across the screen.
         """
         if self.win == False:
-            arcade.draw_text("You Lose", WIDTH//2, HEIGHT//2, arcade.color.WHITE, 100)
+            arcade.set_background_color(arcade.color.RED)
+            arcade.draw_text("You Lose", 700, 700, arcade.color.WHITE, 100)
         elif self.win == True:
-            arcade.draw_text("You Win", WIDTH//2, HEIGHT//2, arcade.color.WHITE, 100)
+            arcade.set_background_color(arcade.color.GREEN)
+            arcade.draw_text("You Win", 500, 500, arcade.color.BLACK, 100)
 
-        arcade.draw_text(f"{self.score}", 310, 300, arcade.color.WHITE, 24)
-        arcade.draw_rectangle_filled(WIDTH//2, HEIGHT//2, 300, 100, arcade.color.ORANGE)
-        arcade.draw_rectangle_filled(WIDTH//2, HEIGHT//2, 300, 200, arcade.color.ORANGE)
-        arcade.draw_text("Click here to try  \n again", WIDTH//2 - 100, 200, arcade.color.BLACK, 25)
-        arcade.draw_text("Click here to submit  \n score", WIDTH//2 - 100, 100, arcade.color.BLACK, 25)
+        arcade.draw_text(f"your score was: {self.score}", 500, 450, arcade.color.BLACK, 50)
+        arcade.draw_rectangle_filled(WIDTH//2, 300, 300, 100, arcade.color.ORANGE)
+        arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100, arcade.color.ORANGE)
+        arcade.draw_text("Click here to try  \n again", WIDTH//2 - 100, 300, arcade.color.BLACK, 25)
+        arcade.draw_text("Click here to submit  \n score", WIDTH//2 - 100, 75, arcade.color.BLACK, 25)
 
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        if 300 < _x < 900 and 300 < _y < 400:
-
+        if 300 < _x < 900 and 250 < _y < 400:
             game_view = GameView()
             self.window.show_view(game_view)
+        elif 300 < _x < 900 and 50 < _y < 200:
+            score_view = ScoreView()
+            self.window.show_view(score_view)
+
+
+class ScoreView(arcade.View):
+    def __init__(self):
+        super().__init__()
+        arcade.set_background_color(arcade.color.BLACK)
+
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100, arcade.color.ORANGE)
+        
+
+
 
 
 def main():
