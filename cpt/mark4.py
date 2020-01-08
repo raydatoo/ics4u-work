@@ -61,13 +61,21 @@ class Heart(arcade.Sprite):
 
 class Coin(arcade.Sprite):
 
-    def __init__(self, image, center_x, center_y, collection_bonus):
-        super().__init__(image)
-        self.scale = .05
+    def __init__(self, image, center_x, center_y):
+        super().__init__(image, scale=0.05)
         self.center_x = center_x
         self.center_y = center_y
-        self.collection_bonus = collection_bonus
+        self.collection_bonus = 50
         self.time_collected = None
+
+
+class Diamond(Coin):
+    def __init__(self, image, center_x, center_y):
+        super().__init__(image, center_x, center_y)
+        self.scale = 0.25
+        self.collection_bonus = 500
+        self.time_collected = None
+
 
 
 # player class
@@ -173,25 +181,31 @@ class GameView(arcade.View):
         heart = Heart("heart.jpg", 5)
         self.heart_list.append(heart)
 
-        coin = Coin("coin.png", 800, 550, 45)
+        coin = Coin("coin.png", 800, 550)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 380, 50, 10)
+        coin = Coin("coin.png", 380, 50)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 200, 400, 60)
+        coin = Coin("coin.png", 200, 400)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 1250, 500, 75)
+        coin = Coin("coin.png", 1250, 500)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 200, 300, 55)
+        coin = Coin("coin.png", 200, 300)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
+
+        coin = Diamond("dimond.png", 100, 100)
+        self.coin_list.append(coin)
+        self.recur_list.append(coin)
+
+        
 
         self.frame_count = 0
         self.score = 0
@@ -290,7 +304,7 @@ class GameView(arcade.View):
 
         if self.player.center_x > 1300 and self.player.center_y < 50:
             finish_view = FinishView()
-            self.score += 1000*(300-self.frame_count//60)
+            self.score += 100*(300-self.frame_count//60)
             finish_view.score = self.score
             finish_view.win = True
             self.window.show_view(finish_view)
@@ -342,7 +356,7 @@ class FinishView(arcade.View):
         """
         if self.win is False:
             arcade.set_background_color(arcade.color.RED)
-            arcade.draw_text("You Lose", 700, 700, arcade.color.WHITE, 100)
+            arcade.draw_text("You Lose", 500, 500, arcade.color.BLACK, 100)
         elif self.win is True:
             arcade.set_background_color(arcade.color.GREEN)
             arcade.draw_text("You Win", 500, 500, arcade.color.BLACK, 100)
