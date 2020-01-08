@@ -153,9 +153,11 @@ class GameView(arcade.View):
         self.turret_list.append(turret)
         turret = Turret("turret.png",  900, 35, 0)
         self.turret_list.append(turret)
-        turret = SpinnyTurret("turret.png",  600, 600, 180)
+        turret = Turret("turret.png",  1200, 600, 180)
         self.turret_list.append(turret)
-        turret = SpinnyTurret("turret.png",  1000, 600, 180)
+        turret = SpinnyTurret("turret.png",  1000, 600, 269)
+        self.turret_list.append(turret)
+        turret = SpinnyTurret("turret.png",  600, 600, 91)
         self.turret_list.append(turret)
         
 
@@ -173,6 +175,7 @@ class GameView(arcade.View):
         self.turret_list[6].activated = True
         self.turret_list[7].activated = True
         self.turret_list[8].activated = True
+        self.turret_list[9].activated = True
         
 
         self.lasers = arcade.SpriteList()
@@ -271,11 +274,12 @@ class GameView(arcade.View):
         
             
         if self.frame_count %3 == 0:
+            for turret in self.turret_list[-2:]:
             
-            self.turret_list[7].angle -= self.turret_list[7].turn_speed
+                turret.angle -= turret.turn_speed
 
-            if self.turret_list[7].angle == 270 or self.turret_list[7].angle == 90:
-                self.turret_list[7].turn_speed = -self.turret_list[7].turn_speed
+                if turret.angle == 270 or turret.angle == 90:
+                    turret.turn_speed = -turret.turn_speed
                 
 
 
@@ -372,9 +376,7 @@ class FinishView(arcade.View):
 
     def on_draw(self):
         arcade.start_render()
-        """
-        Draw "Game over" across the screen.
-        """
+
         if self.win is False:
             arcade.set_background_color(arcade.color.RED)
             arcade.draw_text("You Lose", 500, 500, arcade.color.BLACK, 100)
@@ -401,7 +403,8 @@ class ScoreView(arcade.View):
     def __init__(self):
         super().__init__()
         arcade.set_background_color(arcade.color.BLACK)
-        self.name = ""
+        self.name = "g"
+        self.b = "d"
 
     def check_name(lista, name):
         if name not in lista:
@@ -483,6 +486,21 @@ class ScoreView(arcade.View):
                 high_value = value
                 high_key = key
         return [high_value, high_key]
+    
+    def on_draw(self):
+        arcade.start_render()
+        arcade.draw_text(self.name, 100,100, arcade.color.WHITE, 50)
+
+    def update(self, delta_time):
+        pass
+
+    def on_key_press(self, key, modifiers):
+        self.name += 
+
+        arcade.draw_text(b, 100,100, arcade.color.WHITE, 50)
+
+    
+
 
 
 
