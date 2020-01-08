@@ -32,6 +32,12 @@ class Turret(arcade.Sprite):
         self.angle = angle
         self.activated = False
 
+
+class SpinnyTurret(Turret):
+    def __init__(self, image, center_x, center_y, angle):
+        super().__init__(image, center_x, center_y, angle)
+        self.turn_speed = 1
+
 # laser class
 
 
@@ -133,28 +139,31 @@ class GameView(arcade.View):
         # set up turrets
 
         self.turret_list = arcade.SpriteList()
-        turret1 = Turret("turret.png",  50, 300, 270)
-        turret2 = Turret("turret.png",  300, 50, 0)
-        turret3 = Turret("turret.png",  600, 600, 180)
-        turret4 = Turret("turret.png",  800, 450, 90)
-        turret5 = Turret("turret.png",  450, 100, 0)
-        turret6 = Turret("turret.png",  1100, 125, 90)
-        turret7 = Turret("turret.png",  1300, 250, 90)
-        turret8 = Turret("turret.png",  1000, 600, 180)
-        turret9 = Turret("turret.png",  900, 35, 0)
+        turret = Turret("turret.png",  50, 300, 270)
+        self.turret_list.append(turret)
+        turret = Turret("turret.png",  300, 50, 0)
+        self.turret_list.append(turret)
+        turret = Turret("turret.png",  800, 450, 90)
+        self.turret_list.append(turret)
+        turret = Turret("turret.png",  450, 100, 0)
+        self.turret_list.append(turret)
+        turret = Turret("turret.png",  1100, 125, 90)
+        self.turret_list.append(turret)
+        turret = Turret("turret.png",  1300, 250, 90)
+        self.turret_list.append(turret)
+        turret = Turret("turret.png",  900, 35, 0)
+        self.turret_list.append(turret)
+        turret = SpinnyTurret("turret.png",  600, 600, 180)
+        self.turret_list.append(turret)
+        turret = SpinnyTurret("turret.png",  1000, 600, 180)
+        self.turret_list.append(turret)
+        
 
-        self.turret_list.append(turret1)
-        self.turret_list.append(turret2)
-        self.turret_list.append(turret3)
-        self.turret_list.append(turret4)
-        self.turret_list.append(turret5)
-        self.turret_list.append(turret6)
-        self.turret_list.append(turret7)
-        self.turret_list.append(turret8)
-        self.turret_list.append(turret9)
+        
+        
 
         # activate initial turrets
-        '''
+        
         self.turret_list[0].activated = True
         self.turret_list[1].activated = True
         self.turret_list[2].activated = True
@@ -163,7 +172,8 @@ class GameView(arcade.View):
         self.turret_list[5].activated = True
         self.turret_list[6].activated = True
         self.turret_list[7].activated = True
-        self.turret_list[8].activated = True'''
+        self.turret_list[8].activated = True
+        
 
         self.lasers = arcade.SpriteList()
         self.heart_list = arcade.SpriteList()
@@ -250,19 +260,30 @@ class GameView(arcade.View):
 
         # shoot laser every this many frames
 
-        if self.frame_count % 90 == 0:
+        if self.frame_count % 120 == 0:
             for turret in self.turret_list:
                 if turret.activated is True:
                     laser = Laser(turret)
                     self.lasers.append(laser)
+        
 
         # spinny turret
-        '''
+        
+            
         if self.frame_count %3 == 0:
-            self.turret_list[7].angle += 1
-            self.turret_list[8].angle += 1
+            
+            self.turret_list[7].angle -= self.turret_list[7].turn_speed
 
-            '''
+            if self.turret_list[7].angle == 270 or self.turret_list[7].angle == 90:
+                self.turret_list[7].turn_speed = -self.turret_list[7].turn_speed
+                
+
+
+            
+
+            
+
+            
 
         # kill laser when it leaves screen to save memory
 
@@ -380,6 +401,7 @@ class ScoreView(arcade.View):
     def __init__(self):
         super().__init__()
         arcade.set_background_color(arcade.color.BLACK)
+        self.name = ""
 
     def check_name(lista, name):
         if name not in lista:
@@ -462,9 +484,7 @@ class ScoreView(arcade.View):
                 high_key = key
         return [high_value, high_key]
 
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100, arcade.color.ORANGE)
+
 
 
 def main():
