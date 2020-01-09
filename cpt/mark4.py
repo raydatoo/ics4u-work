@@ -2,8 +2,92 @@ import arcade
 import math
 import json
 
+
 WIDTH = 1350
 HEIGHT = 700
+
+
+
+def check_name(lista, name):
+    if name not in lista:
+        return name
+    elif name in lista:
+        return check_name(lista, name + "x")
+
+def binary_search(lista, target):
+    start = 0
+    end = len(lista) - 1
+    while start <= end:
+        mid = math.ceil((start + end) // 2)
+        if lista[mid] == target:
+            return mid
+        elif lista[mid] > target:
+            end = mid - 1
+        elif lista[mid] < target:
+            start = mid + 1
+    return -1
+
+def merge_sort(numbers):
+    if len(numbers) == 1:
+        return numbers
+    midpoint = len(numbers)//2
+    left_side = merge_sort(numbers[:midpoint])
+    right_side = merge_sort(numbers[midpoint:])
+    sorted_list = []
+    left_marker = 0
+    right_marker = 0
+    while left_marker < len(left_side) and right_marker < len(right_side):
+
+        if left_side[left_marker] < right_side[right_marker]:
+            sorted_list.append(left_side[left_marker])
+            left_marker += 1
+
+        else:
+            sorted_list.append(right_side[right_marker])
+            right_marker += 1
+
+    while right_marker < len(right_side):
+        sorted_list.append(right_side[right_marker])
+        right_marker += 1
+
+    while left_marker < len(left_side):
+        sorted_list.append(left_side[left_marker])
+        left_marker += 1
+
+    return sorted_list
+
+def save_score(name=None, score=None):
+    with open("scores.json", "r") as f:
+        score_dictionary = json.load(f)
+
+    name_list = []
+    for key in score_dictionary.keys():
+        name_list.append(key)
+
+    if name is not None:
+        name = check_name(name_list, name)
+        score_dictionary[name] = score
+
+    with open("scores.json", "w") as f:
+        json.dump(score_dictionary, f)
+
+    score_list = []
+    for value in score_dictionary.values():
+        score_list.append(value)
+    score_list = merge_sort(score_list)
+
+    return [len(score_list)-(binary_search(score_list, score)), name, score]
+
+def find_highscore():
+    with open("scores.json", "r") as f:
+        dictionary = json.load(f)
+    high_value = 0
+    high_key = None
+    for key, value in dictionary.items():
+        if value > high_value:
+            high_value = value
+            high_key = key
+    return [high_value, high_key]
 
 
 # turret class
@@ -396,110 +480,38 @@ class FinishView(arcade.View):
             self.window.show_view(game_view)
         elif 300 < _x < 900 and 50 < _y < 200:
             score_view = ScoreView()
+            score_view.score = self.score
             self.window.show_view(score_view)
+            
 
 
 class ScoreView(arcade.View):
     def __init__(self):
         super().__init__()
         arcade.set_background_color(arcade.color.BLACK)
-        self.name = "g"
-        self.b = "d"
+        self.name = " " 
+        self.submit = False
 
-    def check_name(lista, name):
-        if name not in lista:
-            return name
-        elif name in lista:
-            return check_name(lista, name + "x")
-
-    def binary_search(lista, target):
-        start = 0
-        end = len(lista) - 1
-        while start <= end:
-            mid = math.ceil((start + end) // 2)
-            if lista[mid] == target:
-                return mid
-            elif lista[mid] > target:
-                end = mid - 1
-            elif lista[mid] < target:
-                start = mid + 1
-        return -1
-
-    def merge_sort(numbers):
-        if len(numbers) == 1:
-            return numbers
-        midpoint = len(numbers)//2
-        left_side = merge_sort(numbers[:midpoint])
-        right_side = merge_sort(numbers[midpoint:])
-        sorted_list = []
-        left_marker = 0
-        right_marker = 0
-        while left_marker < len(left_side) and right_marker < len(right_side):
-
-            if left_side[left_marker] < right_side[right_marker]:
-                sorted_list.append(left_side[left_marker])
-                left_marker += 1
-
-            else:
-                sorted_list.append(right_side[right_marker])
-                right_marker += 1
-
-        while right_marker < len(right_side):
-            sorted_list.append(right_side[right_marker])
-            right_marker += 1
-
-        while left_marker < len(left_side):
-            sorted_list.append(left_side[left_marker])
-            left_marker += 1
-
-        return sorted_list
-
-    def save_score(name=None, score=None):
-        with open("scores.json", "r") as f:
-            score_dictionary = json.load(f)
-
-        name_list = []
-        for key in score_dictionary.keys():
-            name_list.append(key)
-
-        if name is not None:
-            name = check_name(name_list, name)
-            score_dictionary[name] = score
-
-        with open("scores.json", "w") as f:
-            json.dump(score_dictionary, f)
-
-        score_list = []
-        for value in score_dictionary.values():
-            score_list.append(value)
-        score_list = merge_sort(score_list)
-
-        return [len(score_list)-(binary_search(score_list, score)), name, score]
-
-    def find_highscore():
-        with open("scores.json", "r") as f:
-            dictionary = json.load(f)
-        high_value = 0
-        high_key = None
-        for key, value in dictionary.items():
-            if value > high_value:
-                high_value = value
-                high_key = key
-        return [high_value, high_key]
     
-    def on_draw(self):
+    def on_draw(self):  
         arcade.start_render()
-        arcade.draw_text(self.name, 100,100, arcade.color.WHITE, 50)
-
-    def update(self, delta_time):
-        pass
+        if self.submit is False:
+            arcade.draw_text(self.name, 100,100, arcade.color.WHITE, 50)
+    '''else:
+            arcade.draw_text(find_highscore(), 300,30, arcade.color.WHITE, 50)
+    '''
 
     def on_key_press(self, key, modifiers):
-        self.name += 
-
-        arcade.draw_text(b, 100,100, arcade.color.WHITE, 50)
-
-    
+        if key == arcade.key.BACKSPACE and len(self.name) > 1 and self.submit is False:
+            self.name = self.name[:-1]
+        elif key != arcade.key.BACKSPACE and len(self.name)< 5 and self.submit is False:
+            self.name += chr(key)
+        
+            
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.ENTER:
+            self.submit = True
+            save_score(self.name, self.score)
 
 
 
