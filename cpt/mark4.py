@@ -7,12 +7,18 @@ WIDTH = 1350
 HEIGHT = 700
 
 
+def check_name(name):
+    with open("scores.json", "r") as f:
+        score_dictionary = json.load(f)
 
-def check_name(lista, name):
-    if name not in lista:
-        return name
-    elif name in lista:
-        return check_name(lista, name + "x")
+    name_list = []
+    for key in score_dictionary.keys():
+        name_list.append(key)
+
+    if name not in name_list:
+        return True
+    else:
+        return False
 
 def binary_search(lista, target):
     start = 0
@@ -64,9 +70,7 @@ def save_score(name=None, score=None):
     for key in score_dictionary.keys():
         name_list.append(key)
 
-    if name is not None:
-        name = check_name(name_list, name)
-        score_dictionary[name] = score
+    score_dictionary[name] = score
 
     with open("scores.json", "w") as f:
         json.dump(score_dictionary, f)
@@ -491,28 +495,44 @@ class ScoreView(arcade.View):
         arcade.set_background_color(arcade.color.BLACK)
         self.name = " " 
         self.submit = False
+        self.name_taken = False
+        self.frame_count = 0
 
     
     def on_draw(self):  
         arcade.start_render()
         if self.submit is False:
             arcade.draw_text(self.name, 100,100, arcade.color.WHITE, 50)
-    '''else:
-            arcade.draw_text(find_highscore(), 300,30, arcade.color.WHITE, 50)
-    '''
+        else:
+            arcade.draw_text(f"{find_highscore()[1]} : {find_highscore()[0]}", 300,30, arcade.color.WHITE, 50)
+        if self.name_taken is True:
+            arcade.draw_text("no", 500,500, arcade.color.WHITE, 50)
 
+    def update(self, delta_time):
+
+        self.frame_count += 1
+        if self.name_taken is True:
+            start = self.frame_count
+            if start > 120:
+                self.name_taken = False
+        
+    
     def on_key_press(self, key, modifiers):
         if key == arcade.key.BACKSPACE and len(self.name) > 1 and self.submit is False:
             self.name = self.name[:-1]
-        elif key != arcade.key.BACKSPACE and len(self.name)< 5 and self.submit is False:
+        elif key != arcade.key.BACKSPACE and key != arcade.key.ENTER and len(self.name)< 8 and self.submit is False:
             self.name += chr(key)
         
             
     def on_key_release(self, key, modifiers):
         if key == arcade.key.ENTER:
-            self.submit = True
-            save_score(self.name, self.score)
-
+            
+            if check_name(self.name) is True:
+                self.submit = True
+                save_score(self.name, self.score)
+            else:
+                self.name_taken = True
+            
 
 
 
