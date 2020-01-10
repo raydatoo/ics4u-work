@@ -3,6 +3,7 @@ import math
 import json
 
 
+
 WIDTH = 1350
 HEIGHT = 700
 
@@ -185,7 +186,7 @@ class Player(arcade.Sprite):
 
         # Create a variable to hold our speed. 'angle' is created by the parent
         self.speed = 0
-        self.move_speed = 10
+        self.move_speed = 5
         self.turn_speed = 5
         self.center_x = 35
         self.center_y = 550
@@ -203,7 +204,7 @@ class Player(arcade.Sprite):
         self.center_y += self.speed * math.cos(angle_rad)
 
         # keep player in screen
-
+        
         if self.center_x < self.width/2:
             self.center_x = self.width/2
         if self.center_x > WIDTH - self.width/2:
@@ -325,6 +326,7 @@ class GameView(arcade.View):
     def on_draw(self):
         arcade.start_render()  # keep as first line
 
+        
         # Draw everything below here.
         self.player.draw()
         self.lasers.draw()
@@ -334,6 +336,12 @@ class GameView(arcade.View):
 
         output = f"Score: {self.score}"
         arcade.draw_text(output, 1100, 650, arcade.color.WHITE, 30)
+        if self.frame_count < 60:
+            arcade.draw_text("1", 1, 1, arcade.color.WHITE, 500)
+        if self.frame_count < 60:
+            arcade.draw_text("1", 1, 1, arcade.color.WHITE, 500)
+        if self.frame_count < 60:
+            arcade.draw_text("1", 1, 1, arcade.color.WHITE, 500)
 
     # the update
 
@@ -432,9 +440,9 @@ class GameView(arcade.View):
         """Called whenever a key is pressed. """
 
         # moving
-        if key == arcade.key.UP:
+        if key == arcade.key.UP and self.frame_count > 120:
             self.player.speed = self.player.move_speed
-        elif key == arcade.key.DOWN:
+        elif key == arcade.key.DOWN and self.frame_count > 120:
             self.player.speed = -self.player.move_speed
 
         # turning
@@ -497,9 +505,10 @@ class ScoreView(arcade.View):
         self.submit = False
         self.name_taken = False
         self.frame_count = 0
+        
 
     
-    def on_draw(self):  
+    def on_draw(self):
         arcade.start_render()
         if self.submit is False:
             arcade.draw_text(self.name, 100,100, arcade.color.WHITE, 50)
@@ -507,16 +516,16 @@ class ScoreView(arcade.View):
             arcade.draw_text(f"{find_highscore()[1]} : {find_highscore()[0]}", 300,30, arcade.color.WHITE, 50)
         if self.name_taken is True:
             arcade.draw_text("no", 500,500, arcade.color.WHITE, 50)
-
-    def update(self, delta_time):
-
-        self.frame_count += 1
-        if self.name_taken is True:
-            start = self.frame_count
-            if start > 120:
-                self.name_taken = False
-        
     
+    def update(self, delta_time):
+        if self.name_taken is True:
+            self.frame_count += 1
+        if self.frame_count > 120:
+            self.name_taken = False
+            self.frame_count = 0
+
+
+
     def on_key_press(self, key, modifiers):
         if key == arcade.key.BACKSPACE and len(self.name) > 1 and self.submit is False:
             self.name = self.name[:-1]
@@ -530,12 +539,11 @@ class ScoreView(arcade.View):
             if check_name(self.name) is True:
                 self.submit = True
                 save_score(self.name, self.score)
+
             else:
                 self.name_taken = True
+                
             
-
-
-
 
 def main():
     window = arcade.Window(WIDTH, HEIGHT, "Different Views Example")
