@@ -310,7 +310,7 @@ class GameView(arcade.View):
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 200, 400)
+        coin = Coin("coin.png", 950, 50)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
@@ -318,7 +318,7 @@ class GameView(arcade.View):
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 200, 300)
+        coin = Coin("coin.png", 650, 350)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
@@ -401,6 +401,11 @@ class GameView(arcade.View):
 
         if self.frame_count % 40 == 0:
             if self.smart_turret.activated is True:
+                laser = Laser(self.smart_turret)
+                self.lasers.append(laser)
+
+        if self.frame_count % 20 == 0:
+            if len(self.coin_list) == 0:
                 laser = Laser(self.smart_turret)
                 self.lasers.append(laser)
 
@@ -495,6 +500,10 @@ class GameView(arcade.View):
             self.window.show_view(FinishView())
             FinishView.win = True
             FinishView.score = 5
+
+        elif key == arcade.key.KEY_1:
+            self.coin_list[0].remove_from_sprite_lists()
+            self.coin_list[0].time_collected = 300-self.frame_count//60
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
