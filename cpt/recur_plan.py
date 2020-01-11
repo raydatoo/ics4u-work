@@ -1,4 +1,4 @@
-
+'''
 import json
 import math
 
@@ -104,3 +104,88 @@ def find_highscore():
 print(save_score("john", 6))
 
 
+'''
+
+import arcade
+import math
+import os
+
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+SCREEN_TITLE = "Sprites and Bullets Enemy Aims Example"
+
+
+
+class MyGame(arcade.Window):
+    """ Main application class """
+
+    def __init__(self, width, height, title):
+        super().__init__(width, height, title)
+
+
+        arcade.set_background_color(arcade.color.BLACK)
+
+
+
+        self.enemy_list = None
+
+        self.player_list = None
+        self.player = None
+
+    def setup(self):
+        self.enemy_list = arcade.SpriteList()
+        self.player_list = arcade.SpriteList()
+
+        # Add player ship
+        self.player = arcade.Sprite("rokit_ship.png", 0.5)
+        self.player_list.append(self.player)
+
+        # Add top-left enemy ship
+        enemy = arcade.Sprite("turret.png", 0.5)
+        enemy.center_x = 120
+        enemy.center_y = SCREEN_HEIGHT - enemy.height
+        enemy.angle = 180
+        self.enemy_list.append(enemy)
+
+       
+    def on_draw(self):
+        """Render the screen. """
+
+        arcade.start_render()
+
+        self.enemy_list.draw()
+        self.player_list.draw()
+
+    def on_update(self, delta_time):
+        """All the logic to move, and the game logic goes here. """
+
+     
+
+        # Loop through each enemy that we have
+        for enemy in self.enemy_list:
+   
+            
+    
+             
+
+            enemy.angle = math.degrees(math.atan2(self.player.center_y - enemy.center_y, self.player.center_x - enemy.center_x))-90
+
+            
+            
+
+       
+    def on_mouse_motion(self, x, y, delta_x, delta_y):
+        """Called whenever the mouse moves. """
+        self.player.center_x = x
+        self.player.center_y = y
+
+
+def main():
+    """ Main method """
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    window.setup()
+    arcade.run()
+
+
+if __name__ == "__main__":
+    main()

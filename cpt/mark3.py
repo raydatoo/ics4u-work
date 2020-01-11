@@ -6,7 +6,7 @@ HEIGHT = 1080
 
 
 
-#turret class
+# turret class
 
 class Turret(arcade.Sprite):
     '''Turret class
