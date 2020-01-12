@@ -123,7 +123,6 @@ def find_highscores():
         data.append(high_key)
         data.append(high_value)
         del dictionary[high_key]
-        
     return data
 
 
@@ -408,6 +407,7 @@ class GameView(arcade.View):
                              HEIGHT//2,
                              arcade.color.WHITE,
                              500,
+                             font_name="ahronbd",
                              align="center",
                              anchor_x="center",
                              anchor_y="center")
@@ -570,6 +570,7 @@ class FinishView(arcade.View):
                              550,
                              arcade.color.BLACK,
                              100,
+                             font_name="ahronbd",
                              align="center",
                              anchor_x="center",
                              anchor_y="center")
@@ -580,6 +581,7 @@ class FinishView(arcade.View):
                              550,
                              arcade.color.BLACK,
                              100,
+                             font_name="ahronbd",
                              align="center",
                              anchor_x="center",
                              anchor_y="center")
@@ -609,6 +611,7 @@ class FinishView(arcade.View):
                          300,
                          arcade.color.WHITE,
                          25,
+                         font_name="ahronbd",
                          align="center",
                          anchor_x="center",
                          anchor_y="center")
@@ -617,6 +620,7 @@ class FinishView(arcade.View):
                          100,
                          arcade.color.WHITE,
                          25,
+                         font_name="ahronbd",
                          align="center",
                          anchor_x="center",
                          anchor_y="center")
@@ -660,23 +664,46 @@ class ScoreView(arcade.View):
         # typing name
         if self.submit is False:
             arcade.draw_text("ENTER NAME:",
-                             400,
-                             HEIGHT//2,
-                             arcade.color.WHITE,
                              100,
-                             align="center",
-                             anchor_x="center",
-                             anchor_y="center")
+                             310,
+                             arcade.color.WHITE,
+                             80,
+                             font_name="ahronbd")
 
-            arcade.draw_text(self.name, 750, 300, arcade.color.WHITE, 100)
+            arcade.draw_text(self.name,
+                             750,
+                             310,
+                             arcade.color.WHITE,
+                             80,
+                             font_name="ahronbd")
 
         # highscore
         else:
-            print(find_highscores())
+            leaderboard = (find_highscores())
+            for i in range(6):
+                if leaderboard[i] == 0:
+                    leaderboard[i] = " "
+            top = 300
+            index = 0
+            for i in range(3):
+                arcade.draw_text(leaderboard[index],
+                                 200,
+                                 top,
+                                 arcade.color.WHITE,
+                                 50,
+                                 font_name="ahronbd")
+                arcade.draw_text(str(leaderboard[index + 1]),
+                                 600,
+                                 top,
+                                 arcade.color.WHITE,
+                                 60,
+                                 font_name="ahronbd")
+                top -= 100
+                index += 2
 
         # name taken
         if self.name_taken is True:
-            arcade.draw_text("no", 500, 500, arcade.color.WHITE, 50)
+            arcade.draw_text("NAME TAKEN", 500, 500, arcade.color.WHITE, 50)
 
     # flash message if name taken
 
