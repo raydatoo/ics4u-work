@@ -216,8 +216,9 @@ class Laser(arcade.Sprite):
         self.center_x = turret.center_x
         self.center_y = turret.center_y
         self.angle = turret.angle
-        self.change_x = math.cos(math.radians(self.angle + 90)) * 5
-        self.change_y = math.sin(math.radians(self.angle + 90)) * 5
+        self.speed = 5
+        self.change_x = math.cos(math.radians(self.angle + 90)) * self.speed
+        self.change_y = math.sin(math.radians(self.angle + 90)) * self.speed
         self.texture = arcade.make_soft_square_texture(30,
                                                        arcade.color.ORANGE,
                                                        outer_alpha=255)
@@ -271,6 +272,7 @@ class GameView(arcade.View):
         super().__init__()
 
         arcade.set_background_color(arcade.color.BLACK)
+        self.background = arcade.load_texture("back.jpg")
         self.player = Player("rokit_ship.png")
         self.barrier_on = True
         self.frame_count = 0
@@ -379,7 +381,11 @@ class GameView(arcade.View):
 
     def on_draw(self):
         arcade.start_render()  # keep as first line
-
+        arcade.draw_texture_rectangle(WIDTH//2,
+                                      HEIGHT//2,
+                                      WIDTH,
+                                      HEIGHT,
+                                      self.background)
         arcade.draw_xywh_rectangle_textured(1280,
                                             0,
                                             70,
@@ -395,11 +401,19 @@ class GameView(arcade.View):
         self.heart_list.draw()
         self.coin_list.draw()
 
-        arcade.draw_text(f"Score: {self.score}",
-                         1100,
+        arcade.draw_text("SCORE: ",
+                         1050,
                          650,
                          arcade.color.WHITE,
-                         30)
+                         30,
+                         font_name="ahronbd")
+
+        arcade.draw_text(str(self.score),
+                         1190,
+                         650,
+                         arcade.color.WHITE,
+                         40,
+                         font_name="ahronbd")
 
         if self.frame_count < 120:
             arcade.draw_text(self.countdown(),
