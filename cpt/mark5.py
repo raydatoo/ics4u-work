@@ -4,6 +4,7 @@ import json
 
 WIDTH = 1350
 HEIGHT = 700
+background = arcade.load_texture("images/back.jpg")
 
 # global functions
 
@@ -12,8 +13,8 @@ def count_score(num_list):
     if len(num_list) == 0:
         return 0
     elif num_list[0].time_collected is not None:
-        return num_list[0].time_collected*num_list[0].collection_bonus \
-            + count_score(num_list[1:])
+        return (num_list[0].time_collected*num_list[0].collection_bonus
+                + count_score(num_list[1:]))
     else:
         return 0 + count_score(num_list[1:])
 
@@ -204,8 +205,8 @@ class SmartTurret(Turret):
 
     def update(self, target_x, target_y):
         # Convert angle in degrees to radians.
-        self.angle = -90 + math.degrees(math.atan2(target_y - self.center_y,
-                                                   target_x - self.center_x))
+        self.angle = (-90 + math.degrees(math.atan2(target_y - self.center_y,
+                      target_x - self.center_x)))
 
 
 class Laser(arcade.Sprite):
@@ -231,8 +232,7 @@ class Barrier(arcade.Sprite):
         self.center_x = center_x
         self.center_y = center_y
         self.angle = angle
-        self.texture = arcade.make_soft_square_texture(310,
-                                                       arcade.color.RED,
+        self.texture = arcade.make_soft_square_texture(310, arcade.color.RED,
                                                        outer_alpha=255)
         self.width = 10
 
@@ -272,8 +272,7 @@ class GameView(arcade.View):
         super().__init__()
 
         arcade.set_background_color(arcade.color.BLACK)
-        self.background = arcade.load_texture("back.jpg")
-        self.player = Player("rokit_ship.png")
+        self.player = Player("images/rokit_ship.png")
         self.barrier_on = True
         self.frame_count = 0
         self.score = 0
@@ -285,69 +284,71 @@ class GameView(arcade.View):
         self.barrier_turrets = arcade.SpriteList()
         self.barriers = arcade.SpriteList()
         self.recur_list = []
+        self.reset_message = False
+        self.show_time = 0
 
         # set up turrets
 
-        turret = Turret("turret.png",  800, 450, 90)
+        turret = Turret("images/turret.png",  800, 450, 90)
         self.turret_list.append(turret)
-        turret = Turret("turret.png",  450, 100, 0)
+        turret = Turret("images/turret.png",  450, 100, 0)
         self.turret_list.append(turret)
-        turret = Turret("turret.png",  1100, 125, 90)
+        turret = Turret("images/turret.png",  1100, 125, 90)
         self.turret_list.append(turret)
-        turret = Turret("turret.png",  1300, 250, 90)
+        turret = Turret("images/turret.png",  1300, 250, 90)
         self.turret_list.append(turret)
-        turret = Turret("turret.png",  900, 35, 0)
+        turret = Turret("images/turret.png",  900, 35, 0)
         self.turret_list.append(turret)
-        turret = Turret("turret.png",  1200, 600, 180)
+        turret = Turret("images/turret.png",  1200, 600, 180)
         self.turret_list.append(turret)
-        turret = SpinnyTurret("turret.png",  1000, 600, 269)
+        turret = SpinnyTurret("images/turret.png",  1000, 600, 269)
         self.turret_list.append(turret)
-        turret = SpinnyTurret("turret.png",  600, 600, 91)
+        turret = SpinnyTurret("images/turret.png",  600, 600, 91)
         self.turret_list.append(turret)
 
-        self.smart_turret = SmartTurret("turret.png",  25, 25, 300)
+        self.smart_turret = SmartTurret("images/turret.png",  25, 25, 300)
 
-        barrier_turret = Turret("turret.png",  39, 300, 270)
+        barrier_turret = Turret("images/turret.png",  39, 300, 270)
         self.barrier_turrets.append(barrier_turret)
-        barrier_turret = Turret("turret.png",  300, 39, 0)
+        barrier_turret = Turret("images/turret.png",  300, 39, 0)
         self.barrier_turrets.append(barrier_turret)
 
         # set up hearts
 
-        heart = Heart("heart.jpg", 1)
+        heart = Heart("images/heart.jpg", 1)
         self.heart_list.append(heart)
-        heart = Heart("heart.jpg", 2)
+        heart = Heart("images/heart.jpg", 2)
         self.heart_list.append(heart)
-        heart = Heart("heart.jpg", 3)
+        heart = Heart("images/heart.jpg", 3)
         self.heart_list.append(heart)
-        heart = Heart("heart.jpg", 4)
+        heart = Heart("images/heart.jpg", 4)
         self.heart_list.append(heart)
-        heart = Heart("heart.jpg", 5)
+        heart = Heart("images/heart.jpg", 5)
         self.heart_list.append(heart)
 
         # set up coins
 
-        coin = Coin("coin.png", 800, 550)
+        coin = Coin("images/coin.png", 800, 550)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 380, 50)
+        coin = Coin("images/coin.png", 380, 50)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 950, 50)
+        coin = Coin("images/coin.png", 950, 50)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 1250, 500)
+        coin = Coin("images/coin.png", 1250, 500)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Coin("coin.png", 650, 350)
+        coin = Coin("images/coin.png", 650, 350)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
-        coin = Diamond("dimond.png", 100, 100)
+        coin = Diamond("images/dimond.png", 100, 100)
         self.coin_list.append(coin)
         self.recur_list.append(coin)
 
@@ -381,17 +382,11 @@ class GameView(arcade.View):
 
     def on_draw(self):
         arcade.start_render()  # keep as first line
-        arcade.draw_texture_rectangle(WIDTH//2,
-                                      HEIGHT//2,
-                                      WIDTH,
-                                      HEIGHT,
-                                      self.background)
-        arcade.draw_xywh_rectangle_textured(1280,
-                                            0,
-                                            70,
-                                            50,
+        arcade.draw_texture_rectangle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT,
+                                      background)
+        arcade.draw_xywh_rectangle_textured(1280, 0, 70, 50,
                                             arcade.load_texture
-                                            ("finish box.jpg"))
+                                            ("images/finish box.jpg"))
         self.barriers.draw()
         self.lasers.draw()
         self.barrier_turrets.draw()
@@ -401,30 +396,20 @@ class GameView(arcade.View):
         self.heart_list.draw()
         self.coin_list.draw()
 
-        arcade.draw_text("SCORE: ",
-                         1050,
-                         650,
-                         arcade.color.WHITE,
-                         30,
-                         font_name="ahronbd")
+        arcade.draw_text("SCORE: ", 1050, 650, arcade.color.WHITE,
+                         30, font_name="ahronbd")
 
-        arcade.draw_text(str(self.score),
-                         1190,
-                         650,
-                         arcade.color.WHITE,
-                         40,
-                         font_name="ahronbd")
+        arcade.draw_text(str(self.score), 1190, 650, arcade.color.WHITE,
+                         40, font_name="ahronbd")
 
         if self.frame_count < 120:
-            arcade.draw_text(self.countdown(),
-                             WIDTH//2,
-                             HEIGHT//2,
-                             arcade.color.WHITE,
-                             500,
-                             font_name="ahronbd",
-                             align="center",
-                             anchor_x="center",
+            arcade.draw_text(self.countdown(), WIDTH//2, HEIGHT//2,
+                             arcade.color.WHITE, 500, font_name="ahronbd",
+                             align="center", anchor_x="center",
                              anchor_y="center")
+
+        if self.reset_message is True:
+            arcade.draw_text("SCORES RESET", 500, 500, arcade.color.RED, 50)
 
     # the update
 
@@ -477,9 +462,9 @@ class GameView(arcade.View):
                 self.heart_list[-1].remove_from_sprite_lists()
                 print(len(self.heart_list))
 
-        if self.player.collides_with_list(self.turret_list) \
-           or self.player.collides_with_list(self.barrier_turrets) \
-           or self.player.collides_with_list(self.barriers):
+        if (self.player.collides_with_list(self.turret_list)
+                or self.player.collides_with_list(self.barrier_turrets)
+                or self.player.collides_with_list(self.barriers)):
 
             self.player.center_x = 35
             self.player.center_y = 575
@@ -536,6 +521,13 @@ class GameView(arcade.View):
             finish_view.win = False
             self.window.show_view(finish_view)
 
+        
+        if self.reset_message is True:
+            self.show_time += 1
+        if self.show_time > 60:
+            self.reset_message = False
+            self.show_time = 0
+
     # key functions
 
     def on_key_press(self, key, modifiers):
@@ -554,13 +546,21 @@ class GameView(arcade.View):
 
         # cheat codes in case you suck
 
-        elif key == arcade.key.KEY_0:
+        elif key == arcade.key.EXCLAMATION:
             self.player.center_x = 1330
             self.player.center_y = 20
 
-        elif key == arcade.key.KEY_1:
+        elif key == arcade.key.AT:
             self.coin_list[0].remove_from_sprite_lists()
             self.coin_list[0].time_collected = 300-self.frame_count//60
+
+        elif key == arcade.key.HASH:
+            with open("scores.json", "r") as f:
+                score_dictionary = json.load(f)
+            score_dictionary = {" ": 0, "  ": 0, "   ": 0}
+            with open("scores.json", "w") as f:
+                json.dump(score_dictionary, f)
+            self.reset_message = True
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -579,65 +579,30 @@ class FinishView(arcade.View):
         # print win/lose screen
         if self.win is False:
             arcade.set_background_color(arcade.color.RED)
-            arcade.draw_text("YOU LOSE",
-                             WIDTH//2,
-                             550,
-                             arcade.color.BLACK,
-                             100,
-                             font_name="ahronbd",
-                             align="center",
-                             anchor_x="center",
-                             anchor_y="center")
+            arcade.draw_text("YOU LOSE", WIDTH//2, 550, arcade.color.BLACK,
+                             100, font_name="ahronbd", align="center",
+                             anchor_x="center", anchor_y="center")
         elif self.win is True:
             arcade.set_background_color(arcade.color.GREEN)
-            arcade.draw_text("YOU WIN",
-                             WIDTH//2,
-                             550,
-                             arcade.color.BLACK,
-                             100,
-                             font_name="ahronbd",
-                             align="center",
-                             anchor_x="center",
-                             anchor_y="center")
+            arcade.draw_text("YOU WIN", WIDTH//2, 550, arcade.color.BLACK, 100,
+                             font_name="ahronbd", align="center",
+                             anchor_x="center", anchor_y="center")
 
         # buttons
 
-        arcade.draw_text(f"YOUR SCORE WAS: {self.score}",
-                         WIDTH//2,
-                         450,
-                         arcade.color.BLACK,
-                         50,
-                         align="center",
-                         anchor_x="center",
-                         anchor_y="center")
-        arcade.draw_rectangle_filled(WIDTH//2,
-                                     300,
-                                     300,
-                                     100,
+        arcade.draw_text(f"YOUR SCORE WAS: {self.score}", WIDTH//2, 450,
+                         arcade.color.BLACK, 50, align="center",
+                         anchor_x="center", anchor_y="center")
+        arcade.draw_rectangle_filled(WIDTH//2, 300, 300, 100,
                                      arcade.color.BLACK)
-        arcade.draw_rectangle_filled(WIDTH//2,
-                                     100,
-                                     300,
-                                     100,
+        arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100,
                                      arcade.color.BLACK)
-        arcade.draw_text("CLICK TO TRY  \n AGAIN",
-                         WIDTH//2,
-                         300,
-                         arcade.color.WHITE,
-                         25,
-                         font_name="ahronbd",
-                         align="center",
-                         anchor_x="center",
-                         anchor_y="center")
-        arcade.draw_text("CLICK TO SUBMIT  \n SCORE",
-                         WIDTH//2,
-                         100,
-                         arcade.color.WHITE,
-                         25,
-                         font_name="ahronbd",
-                         align="center",
-                         anchor_x="center",
-                         anchor_y="center")
+        arcade.draw_text("CLICK TO TRY  \n AGAIN", WIDTH//2, 300,
+                         arcade.color.WHITE, 25, font_name="ahronbd",
+                         align="center", anchor_x="center", anchor_y="center")
+        arcade.draw_text("CLICK TO SUBMIT  \n SCORE", WIDTH//2, 100,
+                         arcade.color.WHITE, 25, font_name="ahronbd",
+                         align="center", anchor_x="center", anchor_y="center")
 
     # click buttons
 
@@ -651,17 +616,7 @@ class FinishView(arcade.View):
             score_view = ScoreView()
             score_view.score = self.score
             self.window.show_view(score_view)
-
-    # developer code for reset scoreboard (if ur a sore loser):
-
-    def on_key_press(self, key, modifiers):
-        if key == arcade.key.KEY_0:
-            with open("scores.json", "r") as f:
-                score_dictionary = json.load(f)
-            score_dictionary = {" ": 0, "  ": 0, "   ": 0}
-            with open("scores.json", "w") as f:
-                json.dump(score_dictionary, f)
-
+    
 
 class ScoreView(arcade.View):
     def __init__(self):
@@ -674,25 +629,21 @@ class ScoreView(arcade.View):
 
     def on_draw(self):
         arcade.start_render()
-
+        arcade.draw_texture_rectangle(WIDTH//2, HEIGHT//2, WIDTH, HEIGHT,
+                                      background)
         # typing name
         if self.submit is False:
-            arcade.draw_text("ENTER NAME:",
-                             100,
-                             310,
-                             arcade.color.WHITE,
-                             80,
+            arcade.draw_text("ENTER NAME:", 100, 310, arcade.color.WHITE, 80,
                              font_name="ahronbd")
 
-            arcade.draw_text(self.name,
-                             750,
-                             310,
-                             arcade.color.WHITE,
-                             80,
+            arcade.draw_text(self.name, 750, 310, arcade.color.WHITE, 80,
                              font_name="ahronbd")
 
         # highscore
         else:
+            arcade.draw_text("HIGHSCORES", WIDTH//2, 600,
+                             arcade.color.ELECTRIC_BLUE, 100, font_name="ahronbd",
+                             align="center", anchor_x="center", anchor_y="center")
             leaderboard = (find_highscores())
             for i in range(6):
                 if leaderboard[i] == 0:
@@ -700,24 +651,16 @@ class ScoreView(arcade.View):
             top = 300
             index = 0
             for i in range(3):
-                arcade.draw_text(leaderboard[index],
-                                 200,
-                                 top,
-                                 arcade.color.WHITE,
-                                 50,
-                                 font_name="ahronbd")
-                arcade.draw_text(str(leaderboard[index + 1]),
-                                 600,
-                                 top,
-                                 arcade.color.WHITE,
-                                 60,
-                                 font_name="ahronbd")
+                arcade.draw_text(leaderboard[index], 200, top,
+                                 arcade.color.WHITE, 50, font_name="ahronbd")
+                arcade.draw_text(str(leaderboard[index + 1]), 600, top,
+                                 arcade.color.WHITE, 60, font_name="ahronbd")
                 top -= 100
                 index += 2
 
         # name taken
         if self.name_taken is True:
-            arcade.draw_text("NAME TAKEN", 500, 500, arcade.color.WHITE, 50)
+            arcade.draw_text("NAME ALREADY TAKEN", WIDTH//2, 500, arcade.color.RED, 80, align="center", anchor_x="center", anchor_y="center")
 
     # flash message if name taken
 
@@ -733,20 +676,20 @@ class ScoreView(arcade.View):
     # type name
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.BACKSPACE \
-         and len(self.name) > 1 \
-         and self.submit is False:
+        if (key == arcade.key.BACKSPACE
+           and len(self.name) > 1
+           and self.submit is False):
             self.name = self.name[:-1]
 
-        elif key != arcade.key.BACKSPACE \
-         and key != arcade.key.ENTER \
-         and len(self.name) < 8 \
-         and self.submit is False:
+        elif (key != arcade.key.BACKSPACE
+                and key != arcade.key.ENTER
+                and len(self.name) < 8
+                and self.submit is False):
             self.name += (chr(key)).upper()
 
     # enter and check name/score
     def on_key_release(self, key, modifiers):
-        if key == arcade.key.ENTER and self.name is not " ":
+        if key == arcade.key.ENTER and self.name is not " " and self.submit is False:
 
             if check_name(self.name) is True:
                 self.submit = True
