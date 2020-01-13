@@ -95,19 +95,7 @@ def save_score(name=None, score=None):
         score_list.append(value)
     score_list = merge_sort(score_list)
 
-    return [len(score_list)-(binary_search(score_list, score)), name, score]
-
-
-def find_highscore():
-    with open("scores.json", "r") as f:
-        dictionary = json.load(f)
-    high_value = 0
-    high_key = None
-    for key, value in dictionary.items():
-        if value > high_value:
-            high_value = value
-            high_key = key
-    return [high_value, high_key]
+    return [len(score_list)-(binary_search(score_list, score)), score, name]
 
 
 def find_highscores():
@@ -396,20 +384,19 @@ class GameView(arcade.View):
         self.heart_list.draw()
         self.coin_list.draw()
 
-        arcade.draw_text("SCORE: ", 1050, 650, arcade.color.WHITE,
-                         30, font_name="ahronbd")
-
-        arcade.draw_text(str(self.score), 1190, 650, arcade.color.WHITE,
-                         40, font_name="ahronbd")
+        arcade.draw_text(f"SCORE: {self.score}", 1050, 650, arcade.color.WHITE,
+                         30)
 
         if self.frame_count < 120:
             arcade.draw_text(self.countdown(), WIDTH//2, HEIGHT//2,
-                             arcade.color.WHITE, 500, font_name="ahronbd",
+                             arcade.color.WHITE, 500,
                              align="center", anchor_x="center",
                              anchor_y="center")
 
         if self.reset_message is True:
-            arcade.draw_text("SCORES RESET", 500, 500, arcade.color.RED, 50)
+            arcade.draw_text("SCORE BOARD HAS\nBEEN RESET", WIDTH//2, 500,
+                             arcade.color.RED, 100, align="center",
+                             anchor_x="center", anchor_y="center")
 
     # the update
 
@@ -521,7 +508,6 @@ class GameView(arcade.View):
             finish_view.win = False
             self.window.show_view(finish_view)
 
-        
         if self.reset_message is True:
             self.show_time += 1
         if self.show_time > 60:
@@ -546,15 +532,18 @@ class GameView(arcade.View):
 
         # cheat codes in case you suck
 
-        elif key == arcade.key.EXCLAMATION:
-            self.player.center_x = 1330
-            self.player.center_y = 20
+        elif key == arcade.key.KEY_1:
+            finish_view = FinishView()
+            self.score = 9999999
+            finish_view.score = self.score
+            finish_view.win = True
+            self.window.show_view(finish_view)
 
-        elif key == arcade.key.AT:
+        elif key == arcade.key.KEY_2:
             self.coin_list[0].remove_from_sprite_lists()
             self.coin_list[0].time_collected = 300-self.frame_count//60
 
-        elif key == arcade.key.HASH:
+        elif key == arcade.key.KEY_3:
             with open("scores.json", "r") as f:
                 score_dictionary = json.load(f)
             score_dictionary = {" ": 0, "  ": 0, "   ": 0}
@@ -580,13 +569,13 @@ class FinishView(arcade.View):
         if self.win is False:
             arcade.set_background_color(arcade.color.RED)
             arcade.draw_text("YOU LOSE", WIDTH//2, 550, arcade.color.BLACK,
-                             100, font_name="ahronbd", align="center",
-                             anchor_x="center", anchor_y="center")
+                             100, align="center", anchor_x="center",
+                             anchor_y="center")
         elif self.win is True:
             arcade.set_background_color(arcade.color.GREEN)
             arcade.draw_text("YOU WIN", WIDTH//2, 550, arcade.color.BLACK, 100,
-                             font_name="ahronbd", align="center",
-                             anchor_x="center", anchor_y="center")
+                             align="center", anchor_x="center",
+                             anchor_y="center")
 
         # buttons
 
@@ -598,11 +587,11 @@ class FinishView(arcade.View):
         arcade.draw_rectangle_filled(WIDTH//2, 100, 300, 100,
                                      arcade.color.BLACK)
         arcade.draw_text("CLICK TO TRY  \n AGAIN", WIDTH//2, 300,
-                         arcade.color.WHITE, 25, font_name="ahronbd",
-                         align="center", anchor_x="center", anchor_y="center")
+                         arcade.color.WHITE, 25, align="center",
+                         anchor_x="center", anchor_y="center")
         arcade.draw_text("CLICK TO SUBMIT  \n SCORE", WIDTH//2, 100,
-                         arcade.color.WHITE, 25, font_name="ahronbd",
-                         align="center", anchor_x="center", anchor_y="center")
+                         arcade.color.WHITE, 25, align="center",
+                         anchor_x="center", anchor_y="center")
 
     # click buttons
 
@@ -616,7 +605,7 @@ class FinishView(arcade.View):
             score_view = ScoreView()
             score_view.score = self.score
             self.window.show_view(score_view)
-    
+
 
 class ScoreView(arcade.View):
     def __init__(self):
@@ -633,34 +622,69 @@ class ScoreView(arcade.View):
                                       background)
         # typing name
         if self.submit is False:
-            arcade.draw_text("ENTER NAME:", 100, 310, arcade.color.WHITE, 80,
-                             font_name="ahronbd")
+            arcade.draw_text("ENTER NAME:", 100, 310, arcade.color.WHITE, 80,)
 
-            arcade.draw_text(self.name, 750, 310, arcade.color.WHITE, 80,
-                             font_name="ahronbd")
+            arcade.draw_text(self.name, 750, 310, arcade.color.WHITE, 80)
 
         # highscore
         else:
             arcade.draw_text("HIGHSCORES", WIDTH//2, 600,
-                             arcade.color.ELECTRIC_BLUE, 100, font_name="ahronbd",
-                             align="center", anchor_x="center", anchor_y="center")
+                             arcade.color.AQUA, 120,
+                             align="center", anchor_x="center",
+                             anchor_y="center")
+            arcade.draw_text("RANK", WIDTH//3 - 100, 475,
+                             arcade.color.NEON_GREEN, 70,
+                             align="center", anchor_x="center",
+                             anchor_y="center")
+            arcade.draw_text("SCORE", WIDTH//2, 475,
+                             arcade.color.NEON_GREEN, 70,
+                             align="center", anchor_x="center",
+                             anchor_y="center")
+            arcade.draw_text("NAME", WIDTH - WIDTH//3 + 100, 475,
+                             arcade.color.NEON_GREEN, 70,
+                             align="center", anchor_x="center",
+                             anchor_y="center")
+
             leaderboard = (find_highscores())
+
             for i in range(6):
                 if leaderboard[i] == 0:
                     leaderboard[i] = " "
-            top = 300
+            leaderboard.insert(2, arcade.color.GOLD)
+            leaderboard.insert(5, arcade.color.SILVER)
+            leaderboard.insert(8, arcade.color.BRONZE)
+
+            top = 350
             index = 0
+            suffix = ["ST", "ND", "RD", "TH"]
             for i in range(3):
-                arcade.draw_text(leaderboard[index], 200, top,
-                                 arcade.color.WHITE, 50, font_name="ahronbd")
-                arcade.draw_text(str(leaderboard[index + 1]), 600, top,
-                                 arcade.color.WHITE, 60, font_name="ahronbd")
-                top -= 100
-                index += 2
+                arcade.draw_text(leaderboard[index], 875, top,
+                                 leaderboard[index + 2], 50)
+                arcade.draw_text(str(leaderboard[index + 1]), 560, top,
+                                 leaderboard[index + 2], 50)
+                arcade.draw_text(str(index//3 + 1) + suffix[index//3], 250,
+                                 top, leaderboard[index + 2], 50)
+
+                top -= 75
+                index += 3
+            if self.stats[0] > 3:
+                top -= 25
+                arcade.draw_text(str(self.stats[2]), 875, top,
+                                 arcade.color.BLAST_OFF_BRONZE, 50)
+                arcade.draw_text(str(self.stats[1]), 560, top,
+                                 arcade.color.BLAST_OFF_BRONZE, 50)
+                arcade.draw_text(str(self.stats[0]) + suffix[3], 250, top,
+                                 arcade.color.BLAST_OFF_BRONZE, 50)
+            else:
+                arcade.draw_text("NICE JOB YOU MADE THE BOARD!", WIDTH//2, top,
+                                 arcade.color.NEON_GREEN, 50, align="center",
+                                 anchor_x="center", anchor_y="center")
 
         # name taken
         if self.name_taken is True:
-            arcade.draw_text("NAME ALREADY TAKEN", WIDTH//2, 500, arcade.color.RED, 80, align="center", anchor_x="center", anchor_y="center")
+            arcade.draw_text("NAME ALREADY TAKEN", WIDTH//2, 500,
+                             arcade.color.RED, 80, align="center",
+                             anchor_x="center", anchor_y="center")
 
     # flash message if name taken
 
@@ -689,11 +713,13 @@ class ScoreView(arcade.View):
 
     # enter and check name/score
     def on_key_release(self, key, modifiers):
-        if key == arcade.key.ENTER and self.name is not " " and self.submit is False:
+        if (key == arcade.key.ENTER
+           and self.name is not " "
+           and self.submit is False):
 
             if check_name(self.name) is True:
                 self.submit = True
-                save_score(self.name, self.score)
+                self.stats = save_score(self.name, self.score)
 
             else:
                 self.name_taken = True
